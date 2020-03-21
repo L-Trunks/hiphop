@@ -70,7 +70,8 @@ function setManagement(userData,callback){
             if (data == 0) {
                 callback(err,errorNumber.USER_FIND_ERR())
             } else {
-                callback(err,data[0])
+                console.log(data)
+                callback(err,data)
             }
         }
     });
@@ -117,7 +118,7 @@ function updateUserPermission(data,callback){
             if (data == 0) {
                 callback(err,errorNumber.USER_FIND_ERR())
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -154,8 +155,33 @@ function getUserInfoByUserNameAndNickName(data,callback){
         callback(err,'链接数据库失败')
     })
 }
+//验证原密码
+function verifyOldPassWord(userData,callback){
+    CONNECT.connect().then(res=>{
+    USERMODEL.find({_id:userData['_id']},(err, data) => {
+        if (err) {
+            callback(err,data)
+            //抛出异常
+        } else {
+            //data是我们查数据库得到的数据，没有查到为[]
+            if (data == 0) {
+                callback(err,{})
+            } else {
+                if(data[0].password === userData.password){
+                    callback(err,data[0])
+                }else{
+                    callback(err,errorNumber.OLD_PASSWORD_ERR())
+                }
+                
+            }
+        }
+    });
+    }).catch(err=>{
+        console.log(err)
+        callback(err,'链接数据库失败')
+    })
+}
 //修改个人信息
-
 function updateUserInfo(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
@@ -168,7 +194,7 @@ function updateUserInfo(data,callback){
             if (data == 0) {
                 callback(err,{})
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -177,7 +203,29 @@ function updateUserInfo(data,callback){
         callback(err,'链接数据库失败')
     })
 }
-//获取所有用户列表
+//获取用户列表
+
+function getUserList(data,callback){
+    CONNECT.connect().then(res=>{
+        //用账号去数据库中查找账号是否已经注册
+    USERMODEL.find(data,(err, data) => {
+        if (err) {
+            callback(err,data)
+            //抛出异常
+        } else {
+            //data是我们查数据库得到的数据，没有查到为[]
+            if (data == 0) {
+                callback(err,{})
+            } else {
+                callback(err,data)
+            }
+        }
+    });
+    }).catch(err=>{
+        console.log(err)
+        callback(err,'链接数据库失败')
+    })
+}
 module.exports = {
     userRegister: userRegister,
     userLogin: userLogin,
@@ -185,7 +233,9 @@ module.exports = {
     getUSerInfoByID:getUSerInfoByID,
     updateUserPermission:updateUserPermission,
     getUserInfoByUserNameAndNickName:getUserInfoByUserNameAndNickName,
-    updateUserInfo:updateUserInfo
+    updateUserInfo:updateUserInfo,
+    verifyOldPassWord:verifyOldPassWord,
+    getUserList:getUserList
 
 
 
