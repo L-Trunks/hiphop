@@ -8,9 +8,8 @@ const userService = require('../services/userService')
 
 //登录
 router.post('/login', function (req, res, next) {
-  let userData = req.body.params
+  let userData = req.query
   console.log(userData)
-
   userService.userLogin(userData,
     function (error, data) {
       if (error) {
@@ -31,7 +30,7 @@ router.post('/login', function (req, res, next) {
 
 //注册
 router.post('/register', function (req, res, next) {
-  let userData = req.body.params
+  let userData = req.query
   console.log(userData)
   userService.userRegister(userData,
     function (error, data) {
@@ -53,7 +52,7 @@ router.post('/register', function (req, res, next) {
 
 //根据token获取用户信息
 router.post('/get_user_info_by_token', function (req, res, next) {
-  let userData = req.body.params
+  let userData = req.query
   console.log(userData)
   if (token.checkToken(userData)) {
     let userName = token.decodeToken(userData)
@@ -75,9 +74,11 @@ router.post('/get_user_info_by_token', function (req, res, next) {
 
 //设置管理员
 router.post('/set_management', function (req, res, next) {
-  let accessToken = req.body.params.accessToken
-  let userData = req.body.params
+  let accessToken = req.query.accessToken
+  let userData = req.query
   delete userData.accessToken
+  console.log(userData)
+
   if (token.checkToken(accessToken)) {
     userService.setManagement(userData,
       function (error, data) {

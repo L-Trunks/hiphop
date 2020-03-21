@@ -70,7 +70,8 @@ function setManagement(userData,callback){
             if (data == 0) {
                 callback(err,errorNumber.USER_FIND_ERR())
             } else {
-                callback(err,data[0])
+                console.log(data)
+                callback(err,data)
             }
         }
     });
@@ -117,7 +118,7 @@ function updateUserPermission(data,callback){
             if (data == 0) {
                 callback(err,errorNumber.USER_FIND_ERR())
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -168,7 +169,7 @@ function updateUserInfo(data,callback){
             if (data == 0) {
                 callback(err,{})
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
