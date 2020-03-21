@@ -14,10 +14,10 @@ router.post('/login', function (req, res, next) {
   userService.userLogin(userData,
     function (error, data) {
       if (error) {
-        console.log('出现错误:' + error)
+        console.log('出现错误:' + JSON.stringify(error) )
         next(error);
       } else {
-        console.log(error, '数据::::' + data)
+        console.log(JSON.stringify(error) , '数据::::' + data)
         if (data && data.username) {
           let tokens = token.createToken(data.username, tokenTimes);
           res.json({ code: '200', data: data, accessToken: tokens && tokens || null });
@@ -36,10 +36,10 @@ router.post('/register', function (req, res, next) {
   userService.userRegister(userData,
     function (error, data) {
       if (error) {
-        console.log('出现错误:' + error)
+        console.log('出现错误:' + JSON.stringify(error) )
         next(error);
       } else {
-        console.log(error, '数据::::' + data)
+        console.log(JSON.stringify(error) , '数据::::' + data)
         if (data && data.username) {
           res.json({ code: '200', data: data });
         } else {
@@ -60,10 +60,10 @@ router.post('/get_user_info_by_token', function (req, res, next) {
     userService.getUserInfoByUserNameAndNickName({ username: userName },
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -83,10 +83,10 @@ router.post('/set_management', function (req, res, next) {
     userService.setManagement(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -111,10 +111,10 @@ router.get('/get_user_info_by_id', function (req, res, next) {
     userService.getUSerInfoByID(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -134,10 +134,10 @@ router.post('/ban_user', function (req, res, next) {
     userService.updateUserPermission(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -157,10 +157,10 @@ router.post('/unban_user', function (req, res, next) {
     userService.updateUserPermission(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -177,10 +177,10 @@ router.post('/verify_user_name', function (req, res, next) {
   userService.getUserInfoByUserNameAndNickName(userData,
     function (error, data) {
       if (error) {
-        console.log('出现错误:' + error)
+        console.log('出现错误:' + JSON.stringify(error) )
         next(error);
       } else {
-        console.log(error, '数据::::' + data)
+        console.log(JSON.stringify(error) , '数据::::' + data)
         if (!data) {
           res.json({ code: '200', data: data });
         } else {
@@ -198,10 +198,10 @@ router.post('/verify_nick_name', function (req, res, next) {
   userService.getUserInfoByUserNameAndNickName(userData,
     function (error, data) {
       if (error) {
-        console.log('出现错误:' + error)
+        console.log('出现错误:' + JSON.stringify(error) )
         next(error);
       } else {
-        console.log(error, '数据::::' + data)
+        console.log(JSON.stringify(error) , '数据::::' + data)
         if (!data) {
           res.json({ code: '200', data: data });
         } else {
@@ -221,17 +221,17 @@ router.post('/update_password', function (req, res, next) {
     userService.verifyOldPassWord({ _id: userData._id, password: userData.oldpassword },
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           if (!data) {
             res.json({ code: '400', desc: '未知错误'  });
           } else {
             if (data.username) {
               userService.updateUserInfo({ _id: userData._id, password: userData.nowpassword }, function (error, data) {
                 if (error) {
-                  console.log('出现错误:' + error)
+                  console.log('出现错误:' + JSON.stringify(error) )
                   next(error);
                 } else {
                   res.json({ code: '200', desc: '修改成功,请重新登录' });
@@ -260,10 +260,10 @@ router.post('/update_user_info', function (req, res, next) {
     userService.updateUserInfo(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           if (!data) {
             res.json({ code: '400', desc: '未知错误'  });
           } else {
@@ -286,10 +286,10 @@ router.get('/get_all_user_list', function (req, res, next) {
     userService.getUserList(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data })
 
         }
@@ -309,10 +309,10 @@ router.get('/get_user_list', function (req, res, next) {
     userService.getUserList(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data })
 
         }
@@ -331,10 +331,10 @@ router.get('/get_management_user_list', function (req, res, next) {
     userService.getUserList(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log(error, '数据::::' + data)
+          console.log(JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data })
 
         }
@@ -353,10 +353,10 @@ router.get('/get_god_user_list', function (req, res, next) {
     userService.getUserList(userData,
       function (error, data) {
         if (error) {
-          console.log('出现错误:' + error)
+          console.log('出现错误:' + JSON.stringify(error) )
           next(error);
         } else {
-          console.log( error, '数据::::' + data)
+          console.log( JSON.stringify(error) , '数据::::' + data)
           res.json({ code: '200', data: data })
 
         }

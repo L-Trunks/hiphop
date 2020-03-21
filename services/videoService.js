@@ -1,6 +1,7 @@
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import VIDEOMODEL from '../model/articleModel'
+import mongoose from 'mongoose';
 //上传视频
 function addVideo(videoData, callback) {
     CONNECT.connect().then(res => {
@@ -10,7 +11,7 @@ function addVideo(videoData, callback) {
                 //数据库异常
             } else {
                 //保存成功
-                callback(err, data[0])
+                callback(err, data)
             }
         });
     }).catch(err => {

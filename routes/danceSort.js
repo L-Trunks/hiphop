@@ -11,10 +11,10 @@ router.get('/get_all_dance_sort_list', function (req, res, next) {
     danceSortService.selectSort({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -28,10 +28,10 @@ router.get('/get_dance_sort_list_by_info', function (req, res, next) {
     danceSortService.selectSort(sortData,
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -48,10 +48,10 @@ router.post('/update_dance_sort', function (req, res, next) {
         danceSortService.updateSort(sortData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -70,10 +70,10 @@ router.post('/delete_dance_sort', function (req, res, next) {
         danceSortService.deleteSort(sortData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -91,10 +91,10 @@ router.post('/add_dance_sort', function (req, res, next) {
         danceSortService.addSort(sortData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     if (data.sortname) {
                         res.json({ code: '200', data: data });
                     } else {

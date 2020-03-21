@@ -1,6 +1,7 @@
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import DANCESORTMODEL from '../model/danceSortModel'
+import mongoose from 'mongoose';
 //添加舞种
 function addSort(sortData, callback) {
     CONNECT.connect().then(res => {
@@ -12,15 +13,18 @@ function addSort(sortData, callback) {
                 if (data == 0) {
                     const danceSort = new DANCESORTMODEL(sortData);
                     danceSort.save((err, data, numAffected) => {
+                        mongoose.disconnect()
                         if (err) {
                             callback(err, data)
                             //数据库异常
                         } else {
+                            console.log(data)
                             //保存成功
-                            callback(err, data[0])
+                            callback(err, data)
                         }
                     });
                 } else {
+                    mongoose.disconnect()
                     console.log(data)
                     callback(err, errorNumber.DANCE_SORT_ALREADY())
 
@@ -38,6 +42,7 @@ function addSort(sortData, callback) {
 function deleteSort(sortData, callback) {
     CONNECT.connect().then(res => {
         DANCESORTMODEL.remove(sortData, (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -57,6 +62,7 @@ function deleteSort(sortData, callback) {
 function updateSort(sortData, callback) {
     CONNECT.connect().then(res => {
         DANCESORTMODEL.update({ _id: sortData['_id'] }, { $set: sortData }, (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -85,6 +91,7 @@ function selectSort(sortData, callback) {
                     as: "sortUser"
                 }
             }], (err, data) => {
+                mongoose.disconnect()
                 if (err) {
                     callback(err, data)
                     //抛出异常

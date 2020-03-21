@@ -1,6 +1,7 @@
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
-import ROTATIONIMGMODEL from '../model/danceRotationImgModel'
+import ROTATIONIMGMODEL from '../model/rotationImgModel'
+import mongoose from 'mongoose';
 //添加图片
 function addRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
@@ -12,15 +13,17 @@ function addRotationImg(rotationImgData, callback) {
                 if (data == 0) {
                     const danceRotationImg = new ROTATIONIMGMODEL(rotationImgData);
                     danceRotationImg.save((err, data, numAffected) => {
+                        mongoose.disconnect()
                         if (err) {
                             callback(err, data)
                             //数据库异常
                         } else {
                             //保存成功
-                            callback(err, data[0])
+                            callback(err, data)
                         }
                     });
                 } else {
+                    mongoose.disconnect()
                     console.log(data)
                     callback(err, errorNumber.ROTATION_IMG_ALREADY())
 
@@ -38,6 +41,7 @@ function addRotationImg(rotationImgData, callback) {
 function deleteRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
         ROTATIONIMGMODEL.remove(rotationImgData, (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -57,6 +61,7 @@ function deleteRotationImg(rotationImgData, callback) {
 function updateRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
         ROTATIONIMGMODEL.update({ _id: rotationImgData['_id'] }, { $set: rotationImgData }, (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -85,6 +90,7 @@ function selectRotationImg(rotationImgData, callback) {
                     as: "rotationImgUser"
                 }
             }], (err, data) => {
+                mongoose.disconnect()
                 if (err) {
                     callback(err, data)
                     //抛出异常

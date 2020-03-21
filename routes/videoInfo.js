@@ -14,10 +14,10 @@ router.get('/add_goods', function (req, res, next) {
         videoInfoService.addGoods(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -36,10 +36,10 @@ router.get('/remove_goods', function (req, res, next) {
         videoInfoService.removeGoods(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -59,10 +59,10 @@ router.get('/get_goods_status', function (req, res, next) {
         videoInfoService.getGoodsStatus(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -81,10 +81,10 @@ router.get('/add_collect', function (req, res, next) {
         videoInfoService.addCollect(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -103,10 +103,10 @@ router.get('/remove_collect', function (req, res, next) {
         videoInfoService.removeCollect(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -125,10 +125,10 @@ router.get('/get_collect_list', function (req, res, next) {
         videoInfoService.getCollectList(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -148,10 +148,10 @@ router.get('/add_comments', function (req, res, next) {
         videoInfoService.addComments(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -170,10 +170,10 @@ router.get('/select_comments', function (req, res, next) {
         videoInfoService.selectComments(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }

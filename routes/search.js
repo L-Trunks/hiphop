@@ -9,10 +9,10 @@ router.get('/get_video_result_list', function (req, res, next) {
     searchService.getResultVideoList({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -24,10 +24,10 @@ router.get('/get_article_result_list', function (req, res, next) {
     searchService.getResultArticleList({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }

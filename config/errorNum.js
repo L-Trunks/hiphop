@@ -35,6 +35,14 @@ const DANCE_SORT_ALREADY = () => {
 const ROTATION_IMG_ALREADY = () => {
     return resh.detailResponse('该图片已经存在', '1011')
 }
+const UPLOAD_ERR = () => {
+    return resh.detailResponse('上传失败', '1012')
+}
+
+const WORD_ALREADY = () => {
+    return resh.detailResponse('该关键字已经存在', '1013')
+}
+
 export default {
     DB_CONNECT, 
     NOT_LOGIN, 
@@ -45,5 +53,7 @@ export default {
     NICK_ALREADY,
     OLD_PASSWORD_ERR,
     DANCE_SORT_ALREADY,
-    ROTATION_IMG_ALREADY
+    ROTATION_IMG_ALREADY,
+    UPLOAD_ERR,
+    WORD_ALREADY
 }

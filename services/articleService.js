@@ -1,6 +1,7 @@
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import ARTICLEMODEL from '../model/articleModel'
+import mongoose from 'mongoose';
 //上传文章
 function addArticle(articleData, callback) {
     CONNECT.connect().then(res => {
@@ -27,12 +28,13 @@ function addArticle(articleData, callback) {
                 },
             }
         ], (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
             } else {
                 //保存成功
-                callback(err, data[0])
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -46,6 +48,7 @@ function addArticle(articleData, callback) {
 function deleteArticle(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEMODEL.remove(articleData, (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -81,6 +84,7 @@ function updateArticle(articleData, callback) {
                     as: "articleSort"
                 },
             }], (err, data) => {
+                mongoose.disconnect()
                 if (err) {
                     callback(err, data)
                     //抛出异常
@@ -156,6 +160,7 @@ function selectArticle(articleData, callback) {
             // 计数
             $count: "count"
         }], (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -201,6 +206,7 @@ function getArticleInfoById(articleData, callback) {
                     as: "articleSort"
                 },
             }], (err, data) => {
+                mongoose.disconnect()
                 if (err) {
                     callback(err, data)
                     //抛出异常

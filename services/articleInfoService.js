@@ -2,16 +2,18 @@ import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import ARTICLEINFOMODEL from '../model/articleInfoModel'
 import ARTICLEMODEL from '../model/articleModel'
+import mongoose from 'mongoose';
 //点赞文章
 function addGoods(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
             } else {
                 //保存成功
-                callback(err, data[0])
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -24,6 +26,7 @@ function addGoods(articleData, callback) {
 function removeGoods(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.remove(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -43,6 +46,7 @@ function removeGoods(articleData, callback) {
 function getGoodsStatus(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.find(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -67,6 +71,7 @@ function getGoodsStatus(articleData, callback) {
 function addCollect(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -74,7 +79,7 @@ function addCollect(articleData, callback) {
                 console.log(data)
                 //保存成功
                 if (data) {
-                    callback(err, data[0])
+                    callback(err, data)
                 } else {
                     callback(err, { desc: '收藏失败' })
                 }
@@ -89,6 +94,7 @@ function addCollect(articleData, callback) {
 function removeCollect(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.remove(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -157,6 +163,7 @@ function getCollectList(articleData, callback) {
             // 计数
             $count: "count"
         }], (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -181,6 +188,7 @@ function getCollectList(articleData, callback) {
 function addComments(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -199,18 +207,35 @@ function addComments(articleData, callback) {
 function selectComments(articleData, callback) {
     CONNECT.connect().then(res => {
         let _num = articleData.page_size;//每页几条
-        let _total = 0;
         let _skip = articleData.page_no * _num;
-        let _filter = { userid: articleData.userid, type: articleData.type };
-        let query = ARTICLEINFOMODEL
-            .find({ ..._filter, parentId: 0 })
-        let data = await query
+        let _total = 0
+        let _filter = { userid: articleData.userid, type: articleData.type, parentId: 0 };
+        let data = []
+        ARTICLEINFOMODEL
+            .find(_filter)
             .sort({ createtime: 1 })
             .limit(+_num)
             .skip(+_skip)
             .select('-__v')
-            .lean();
-        let count = await query.count();
+            .lean(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    data = data
+                }
+
+            });
+        ARTICLEINFOMODEL
+            .find(_filter)
+            .count(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    _total = data
+                }
+            });
         // 处理异步回调
         let promises = data.map(item => {
             return ARTICLEINFOMODEL.find({
@@ -218,8 +243,13 @@ function selectComments(articleData, callback) {
             }).select('-__v').lean()
         });
 
-        let list = await Promise.all(promises)
-
+        let list = []
+        Promise.all(promises).then(res => {
+            list = res
+        }).catch(err => {
+            console.log(err)
+            callback(err)
+        })
         data.forEach(item => {
             list.forEach(code => {
                 if (code.length > 0 && item._id == code[0].parentId) {
@@ -229,7 +259,16 @@ function selectComments(articleData, callback) {
                 }
             })
         })
-        callback({ data: data, count })
+        console.log(data)
+        mongoose.disconnect()
+        //格式化数据
+        const page = {
+            page_no: _params.page_no + 1,
+            page_size: _num,
+            total: _total,
+            data: data
+        };
+        callback(err, page)
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
@@ -263,6 +302,7 @@ function getCounts(articleData, callback) {
                     ARTICLEMODEL.update({ _id: articleData['articleid'] },
                         { $set: { goodscount: goodscount, commentscount: commentscount, collectscount: collectscount } },
                         function (err, data) {
+                            mongoose.disconnect()
                             if (err) {
                                 console.log('更新文章点赞收藏评论数失败', err)
                             } else {

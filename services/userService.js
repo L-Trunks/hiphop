@@ -1,6 +1,7 @@
 import USERMODEL from '../model/userModel'
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
+import mongoose from 'mongoose';
 function userRegister(userData, callback) {
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
@@ -13,19 +14,22 @@ function userRegister(userData, callback) {
             if (data == 0) {
                 const register = new USERMODEL(userData);
                 register.save((err,data, numAffected) => {
+                    mongoose.disconnect()
                     if (err) {
                         callback(err,data)
                         //数据库异常
                     } else {
                         //保存成功
-                        callback(err,data[0])
+                        callback(err,data)
                     }
                 });
             } else {
+                mongoose.disconnect()
                 console.log(data)
                 callback(err,errorNumber.USER_ALREADY())
                 //提示用户该账户已经注册
             }
+            
         }
     });
     }).catch(err=>{
@@ -39,6 +43,7 @@ function userLogin(userData, callback) {
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.find(userData, (err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -47,7 +52,7 @@ function userLogin(userData, callback) {
             if (data == 0) {
                 callback(err,errorNumber.USER_LOGIN_ERR())
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -62,6 +67,7 @@ function setManagement(userData,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.update({username:userData['username']},{$set:{permission:'1'}}, (err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -87,6 +93,7 @@ function getUSerInfoByID(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.find({_id:data['_id']}, (err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -95,7 +102,7 @@ function getUSerInfoByID(data,callback){
             if (data == 0) {
                 callback(err,errorNumber.USER_FIND_ERR())
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -110,6 +117,7 @@ function updateUserPermission(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.update({_id:data['_id']}, {$set:{permission:data['permission']}},(err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -138,6 +146,7 @@ function getUserInfoByUserNameAndNickName(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.find(data,(err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -146,7 +155,7 @@ function getUserInfoByUserNameAndNickName(data,callback){
             if (data == 0) {
                 callback(err,{})
             } else {
-                callback(err,data[0])
+                callback(err,data)
             }
         }
     });
@@ -159,6 +168,7 @@ function getUserInfoByUserNameAndNickName(data,callback){
 function verifyOldPassWord(userData,callback){
     CONNECT.connect().then(res=>{
     USERMODEL.find({_id:userData['_id']},(err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -167,8 +177,8 @@ function verifyOldPassWord(userData,callback){
             if (data == 0) {
                 callback(err,{})
             } else {
-                if(data[0].password === userData.password){
-                    callback(err,data[0])
+                if(data.password === userData.password){
+                    callback(err,data)
                 }else{
                     callback(err,errorNumber.OLD_PASSWORD_ERR())
                 }
@@ -186,6 +196,7 @@ function updateUserInfo(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.update({_id:data['_id']},{$set:data},(err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常
@@ -209,6 +220,7 @@ function getUserList(data,callback){
     CONNECT.connect().then(res=>{
         //用账号去数据库中查找账号是否已经注册
     USERMODEL.find(data,(err, data) => {
+        mongoose.disconnect()
         if (err) {
             callback(err,data)
             //抛出异常

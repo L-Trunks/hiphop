@@ -2,6 +2,7 @@ import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import VIDEOMODEL from '../model/videoModel'
 import ARTICLEMODEL from '../model/articleModel'
+import mongoose from 'mongoose';
 //视频搜索
 function getResultVideoList(searchData, callback) {
     CONNECT.connect().then(res => {
@@ -39,6 +40,7 @@ function getResultVideoList(searchData, callback) {
                 sort: { _id: -1 },// 按照 _id倒序排列
             }
         ).exec(function (err, data) { // 回调
+            mongoose.disconnect()
             if (err) {
                 console.log(err)
             } else {
@@ -97,6 +99,7 @@ function getResultArticleList(searchData, callback) {
                 sort: { _id: -1 },// 按照 _id倒序排列
             }
         ).exec(function (err, data) { // 回调
+            mongoose.disconnect()
             if (err) {
                 console.log(err)
             } else {

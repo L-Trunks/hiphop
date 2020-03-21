@@ -11,10 +11,10 @@ router.get('/get_all_article_list', function (req, res, next) {
     articleService.selectArticle({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -27,10 +27,10 @@ router.get('/get_article_list_by_user', function (req, res, next) {
     articleService.selectArticle(articleData,
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -43,10 +43,10 @@ router.get('/get_article_info_by_id', function (req, res, next) {
     articleService.getArticleInfoById(articleData,
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -62,10 +62,10 @@ router.post('/update_article', function (req, res, next) {
         articleService.updateArticle(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -84,10 +84,10 @@ router.post('/delete_article', function (req, res, next) {
         articleService.deleteArticle(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -105,10 +105,10 @@ router.post('/add_article', function (req, res, next) {
         articleService.addArticle(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     if (data.Articlename) {
                         res.json({ code: '200', data: data });
                     } else {

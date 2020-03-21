@@ -2,16 +2,18 @@ import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
 import VIDEOINFOMODEL from '../model/videoInfoModel'
 import VIDEOMODEL from '../model/videoModel'
+import mongoose from 'mongoose';
 //点赞视频
 function addGoods(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.save(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
             } else {
                 //保存成功
-                callback(err, data[0])
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -24,6 +26,7 @@ function addGoods(videoData, callback) {
 function removeGoods(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.remove(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -43,6 +46,7 @@ function removeGoods(videoData, callback) {
 function getGoodsStatus(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.find(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -67,6 +71,7 @@ function getGoodsStatus(videoData, callback) {
 function addCollect(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.save(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -74,7 +79,7 @@ function addCollect(videoData, callback) {
                 console.log(data)
                 //保存成功
                 if (data) {
-                    callback(err, data[0])
+                    callback(err, data)
                 } else {
                     callback(err, { desc: '收藏失败' })
                 }
@@ -89,6 +94,7 @@ function addCollect(videoData, callback) {
 function removeCollect(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.remove(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -157,6 +163,7 @@ function getCollectList(videoData, callback) {
             // 计数
             $count: "count"
         }], (err, data) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
@@ -181,6 +188,7 @@ function getCollectList(videoData, callback) {
 function addComments(videoData, callback) {
     CONNECT.connect().then(res => {
         VIDEOINFOMODEL.save(videoData, (err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -201,16 +209,34 @@ function selectComments(videoData, callback) {
         let _num = videoData.page_size;//每页几条
         let _total = 0;
         let _skip = videoData.page_no * _num;
-        let _filter = { userid: videoData.userid, type: videoData.type };
-        let query = VIDEOINFOMODEL
-            .find({ ..._filter, parentId: 0 })
-        let data = await query
+        let _filter = { userid: videoData.userid, type: videoData.type, parentId: 0 };
+        let data = []
+        VIDEOINFOMODEL
+            .find(_filter)
             .sort({ createtime: 1 })
             .limit(+_num)
             .skip(+_skip)
             .select('-__v')
-            .lean();
-        let count = await query.count();
+            .lean(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    data = data
+                }
+
+
+            });
+        VIDEOINFOMODEL
+            .find(_filter)
+            .count(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    _total = data
+                }
+            });
         // 处理异步回调
         let promises = data.map(item => {
             return VIDEOINFOMODEL.find({
@@ -218,7 +244,13 @@ function selectComments(videoData, callback) {
             }).select('-__v').lean()
         });
 
-        let list = await Promise.all(promises)
+        let list = []
+        Promise.all(promises).then(res => {
+            list = res
+        }).catch(err => {
+            console.log(err)
+            callback(err)
+        })
 
         data.forEach(item => {
             list.forEach(code => {
@@ -229,7 +261,16 @@ function selectComments(videoData, callback) {
                 }
             })
         })
-        callback({ data: data, count })
+        mongoose.disconnect()
+        console.log(data)
+        //格式化数据
+        const page = {
+            page_no: _params.page_no + 1,
+            page_size: _num,
+            total: _total,
+            data: data
+        };
+        callback(err, page)
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })

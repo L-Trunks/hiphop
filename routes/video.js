@@ -11,10 +11,10 @@ router.get('/get_all_video_list', function (req, res, next) {
     videoService.selectVideo({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -27,10 +27,10 @@ router.get('/get_video_list_by_user', function (req, res, next) {
     videoService.selectVideo(videoData,
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -47,10 +47,10 @@ router.post('/update_video', function (req, res, next) {
         videoService.updateVideo(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -69,10 +69,10 @@ router.post('/delete_video', function (req, res, next) {
         videoService.deleteVideo(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -90,10 +90,10 @@ router.post('/add_video', function (req, res, next) {
         videoService.addVideo(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     if (data.Videoname) {
                         res.json({ code: '200', data: data });
                     } else {

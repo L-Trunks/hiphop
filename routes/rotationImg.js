@@ -11,10 +11,10 @@ router.get('/get_all_rotation_img_list', function (req, res, next) {
     rotationImgService.selectRotationImg({},
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -28,10 +28,10 @@ router.get('/get_rotation_img_list_by_info', function (req, res, next) {
     rotationImgService.selectRotationImg(rotationImgData,
         function (error, data) {
             if (error) {
-                console.log('出现错误:' + error)
+                console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(error, '数据::::' + data)
+                console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -48,10 +48,10 @@ router.post('/update_rotation_img', function (req, res, next) {
         rotationImgService.updateRotationImg(rotationImgData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -70,10 +70,10 @@ router.post('/delete_rotation_img', function (req, res, next) {
         rotationImgService.deleteRotationImg(rotationImgData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     res.json({ code: '200', data: data });
                 }
             })
@@ -91,10 +91,10 @@ router.post('/add_rotation_img', function (req, res, next) {
         rotationImgService.addRotationImg(rotationImgData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + error)
+                    console.log('出现错误:' + JSON.stringify(error) )
                     next(error);
                 } else {
-                    console.log(error, '数据::::' + data)
+                    console.log(JSON.stringify(error) , '数据::::' + data)
                     if (data.rotationImgname) {
                         res.json({ code: '200', data: data });
                     } else {
