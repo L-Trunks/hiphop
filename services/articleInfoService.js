@@ -199,18 +199,34 @@ function addComments(articleData, callback) {
 function selectComments(articleData, callback) {
     CONNECT.connect().then(res => {
         let _num = articleData.page_size;//每页几条
-        let _total = 0;
         let _skip = articleData.page_no * _num;
-        let _filter = { userid: articleData.userid, type: articleData.type };
+        let _total = 0
+        let _filter = { userid: articleData.userid, type: articleData.type, parentId: 0 };
         let query = ARTICLEINFOMODEL
-            .find({ ..._filter, parentId: 0 })
-        let data = await query
+            .find(_filter)
+        let data = []
+        query
             .sort({ createtime: 1 })
             .limit(+_num)
             .skip(+_skip)
             .select('-__v')
-            .lean();
-        let count = await query.count();
+            .lean(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    data = data
+                }
+
+            });
+        query.count(function (err, data) {
+            if (err) {
+                console.log(err)
+                callback(err)
+            } else {
+                _total = data
+            }
+        });
         // 处理异步回调
         let promises = data.map(item => {
             return ARTICLEINFOMODEL.find({
@@ -218,8 +234,13 @@ function selectComments(articleData, callback) {
             }).select('-__v').lean()
         });
 
-        let list = await Promise.all(promises)
-
+        let list = []
+        Promise.all(promises).then(res => {
+            list = res
+        }).catch(err => {
+            console.log(err)
+            callback(err)
+        })
         data.forEach(item => {
             list.forEach(code => {
                 if (code.length > 0 && item._id == code[0].parentId) {
@@ -229,7 +250,15 @@ function selectComments(articleData, callback) {
                 }
             })
         })
-        callback({ data: data, count })
+        console.log(data)
+        //格式化数据
+        const page = {
+            page_no: _params.page_no + 1,
+            page_size: _num,
+            total: _total,
+            data: data
+        };
+        callback(err, page)
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })

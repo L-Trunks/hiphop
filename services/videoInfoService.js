@@ -204,13 +204,30 @@ function selectComments(videoData, callback) {
         let _filter = { userid: videoData.userid, type: videoData.type };
         let query = VIDEOINFOMODEL
             .find({ ..._filter, parentId: 0 })
-        let data = await query
+        let data = []
+        query
             .sort({ createtime: 1 })
             .limit(+_num)
             .skip(+_skip)
             .select('-__v')
-            .lean();
-        let count = await query.count();
+            .lean(function (err, data) {
+                if (err) {
+                    console.log(err)
+                    callback(err)
+                } else {
+                    data = data
+                }
+
+
+            });
+        query.count(function (err, data) {
+            if (err) {
+                console.log(err)
+                callback(err)
+            } else {
+                _total = data
+            }
+        });
         // 处理异步回调
         let promises = data.map(item => {
             return VIDEOINFOMODEL.find({
@@ -218,7 +235,13 @@ function selectComments(videoData, callback) {
             }).select('-__v').lean()
         });
 
-        let list = await Promise.all(promises)
+        let list = []
+        Promise.all(promises).then(res => {
+            list = res
+        }).catch(err => {
+            console.log(err)
+            callback(err)
+        })
 
         data.forEach(item => {
             list.forEach(code => {
@@ -229,7 +252,15 @@ function selectComments(videoData, callback) {
                 }
             })
         })
-        callback({ data: data, count })
+        console.log(data)
+        //格式化数据
+        const page = {
+            page_no: _params.page_no + 1,
+            page_size: _num,
+            total: _total,
+            data: data
+        };
+        callback(err, page)
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
