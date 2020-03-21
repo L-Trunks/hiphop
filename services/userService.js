@@ -30,7 +30,7 @@ function userRegister(userData, callback) {
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
     
 }
@@ -53,7 +53,7 @@ function userLogin(userData, callback) {
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 
@@ -77,7 +77,7 @@ function setManagement(userData,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 
@@ -101,7 +101,7 @@ function getUSerInfoByID(data,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 //封号
@@ -124,7 +124,7 @@ function updateUserPermission(data,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 /**
@@ -152,7 +152,7 @@ function getUserInfoByUserNameAndNickName(data,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 //验证原密码
@@ -178,7 +178,7 @@ function verifyOldPassWord(userData,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 //修改个人信息
@@ -200,7 +200,7 @@ function updateUserInfo(data,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 //获取用户列表
@@ -223,7 +223,7 @@ function getUserList(data,callback){
     });
     }).catch(err=>{
         console.log(err)
-        callback(err,'链接数据库失败')
+        callback(err,{desc:'链接数据库失败'})
     })
 }
 module.exports = {

@@ -17,7 +17,7 @@ router.post('/login', function (req, res, next) {
         console.log('出现错误:' + error)
         next(error);
       } else {
-        console.log('出现错误::' + error, '数据::::' + data)
+        console.log(error, '数据::::' + data)
         if (data && data.username) {
           let tokens = token.createToken(data.username, tokenTimes);
           res.json({ code: '200', data: data, accessToken: tokens && tokens || null });
@@ -39,7 +39,7 @@ router.post('/register', function (req, res, next) {
         console.log('出现错误:' + error)
         next(error);
       } else {
-        console.log('出现错误::' + error, '数据::::' + data)
+        console.log(error, '数据::::' + data)
         if (data && data.username) {
           res.json({ code: '200', data: data });
         } else {
@@ -63,7 +63,7 @@ router.post('/get_user_info_by_token', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -86,7 +86,7 @@ router.post('/set_management', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -114,7 +114,7 @@ router.get('/get_user_info_by_id', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -137,7 +137,7 @@ router.post('/ban_user', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -160,7 +160,7 @@ router.post('/unban_user', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data });
         }
       })
@@ -180,7 +180,7 @@ router.post('/verify_user_name', function (req, res, next) {
         console.log('出现错误:' + error)
         next(error);
       } else {
-        console.log('出现错误::' + error, '数据::::' + data)
+        console.log(error, '数据::::' + data)
         if (!data) {
           res.json({ code: '200', data: data });
         } else {
@@ -201,7 +201,7 @@ router.post('/verify_nick_name', function (req, res, next) {
         console.log('出现错误:' + error)
         next(error);
       } else {
-        console.log('出现错误::' + error, '数据::::' + data)
+        console.log(error, '数据::::' + data)
         if (!data) {
           res.json({ code: '200', data: data });
         } else {
@@ -224,9 +224,9 @@ router.post('/update_password', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           if (!data) {
-            res.json({ code: '400', data: { desc: '未知错误' } });
+            res.json({ code: '400', desc: '未知错误'  });
           } else {
             if (data.username) {
               userService.updateUserInfo({ _id: userData._id, password: userData.nowpassword }, function (error, data) {
@@ -234,7 +234,7 @@ router.post('/update_password', function (req, res, next) {
                   console.log('出现错误:' + error)
                   next(error);
                 } else {
-                  res.json({ code: '200', data: { desc: '修改成功,请重新登录' } });
+                  res.json({ code: '200', desc: '修改成功,请重新登录' });
                 }
               })
             } else {
@@ -263,9 +263,9 @@ router.post('/update_user_info', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           if (!data) {
-            res.json({ code: '400', data: { desc: '未知错误' } });
+            res.json({ code: '400', desc: '未知错误'  });
           } else {
             res.json({ code: '200', data: data })
           }
@@ -289,7 +289,7 @@ router.get('/get_all_user_list', function (req, res, next) {
           console.log('出现错误:' + error)
           next(error);
         } else {
-          console.log('出现错误::' + error, '数据::::' + data)
+          console.log(error, '数据::::' + data)
           res.json({ code: '200', data: data })
 
         }
@@ -300,8 +300,69 @@ router.get('/get_all_user_list', function (req, res, next) {
 });
 
 //获取普通用户列表
+router.get('/get_user_list', function (req, res, next) {
+  let userData = req.query
+  console.log(userData)
+  userData.accessToken ? delete userData.accessToken : ''
+  let accessToken = req.query.accessToken
+  if (token.checkToken(accessToken)) {
+    userService.getUserList(userData,
+      function (error, data) {
+        if (error) {
+          console.log('出现错误:' + error)
+          next(error);
+        } else {
+          console.log(error, '数据::::' + data)
+          res.json({ code: '200', data: data })
 
+        }
+      })
+  } else {
+    res.json(errorNumber.TOKEN_TIME_OUT())
+  }
+});
 //获取管理员列表
+router.get('/get_management_user_list', function (req, res, next) {
+  let userData = req.query
+  console.log(userData)
+  userData.accessToken ? delete userData.accessToken : ''
+  let accessToken = req.query.accessToken
+  if (token.checkToken(accessToken)) {
+    userService.getUserList(userData,
+      function (error, data) {
+        if (error) {
+          console.log('出现错误:' + error)
+          next(error);
+        } else {
+          console.log(error, '数据::::' + data)
+          res.json({ code: '200', data: data })
 
+        }
+      })
+  } else {
+    res.json(errorNumber.TOKEN_TIME_OUT())
+  }
+});
 //获取街舞大神列表
+router.get('/get_god_user_list', function (req, res, next) {
+  let userData = req.query
+  console.log(userData)
+  userData.accessToken ? delete userData.accessToken : ''
+  let accessToken = req.query.accessToken
+  if (token.checkToken(accessToken)) {
+    userService.getUserList(userData,
+      function (error, data) {
+        if (error) {
+          console.log('出现错误:' + error)
+          next(error);
+        } else {
+          console.log( error, '数据::::' + data)
+          res.json({ code: '200', data: data })
+
+        }
+      })
+  } else {
+    res.json(errorNumber.TOKEN_TIME_OUT())
+  }
+});
 module.exports = router;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const postingsSchema = new mongoose.Schema({
+const articleSchema = new mongoose.Schema({
     id: String,
     nickname:String,
     title:String,
@@ -8,6 +8,9 @@ const postingsSchema = new mongoose.Schema({
     createtime:{ type: Date, default: Date.now },
     articlepermission:Boolean,
     banreason:String,
-    userid:String
-}, {collection: 'postings'});
-module.exports = mongoose.model('postings', postingsSchema);
+    userid:String,
+    goodscount:Number,
+    commentscount:Number,
+    collectscount:Number
+}, {collection: 'article'});
+module.exports = mongoose.model('article', articleSchema);

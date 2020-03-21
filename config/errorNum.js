@@ -11,7 +11,6 @@ const USER_ALREADY = () => {
     return resh.detailResponse('该用户已被使用', '1003')
 }
 
-
 const TOKEN_TIME_OUT = () => {
     return resh.detailResponse('token失效，请重新登录', '1005')
 }
@@ -30,7 +29,12 @@ const NICK_ALREADY = () => {
 const OLD_PASSWORD_ERR = () => {
     return resh.detailResponse('原密码输入错误', '1009')
 }
-
+const DANCE_SORT_ALREADY = () => {
+    return resh.detailResponse('该舞种已经存在', '1010')
+}
+const ROTATION_IMG_ALREADY = () => {
+    return resh.detailResponse('该图片已经存在', '1011')
+}
 export default {
     DB_CONNECT, 
     NOT_LOGIN, 
@@ -39,5 +43,7 @@ export default {
     USER_LOGIN_ERR,
     USER_FIND_ERR,
     NICK_ALREADY,
-    OLD_PASSWORD_ERR
+    OLD_PASSWORD_ERR,
+    DANCE_SORT_ALREADY,
+    ROTATION_IMG_ALREADY
 }
