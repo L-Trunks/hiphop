@@ -5,7 +5,7 @@ import errorNumber from '../config/errorNum'
 const token = require('../token/token') //引入
 const articleInfoService = require('../services/articleInfoService')
 //点赞文章
-router.get('/add_goods', function (req, res, next) {
+router.post('/add_goods', function (req, res, next) {
     let accessToken = req.query.accessToken
     let articleData = req.query
     delete articleData.accessToken
@@ -139,7 +139,7 @@ router.get('/get_collect_list', function (req, res, next) {
 });
 
 //添加评论
-router.get('/add_comments', function (req, res, next) {
+router.post('/add_comments', function (req, res, next) {
     let accessToken = req.query.accessToken
     let articleData = req.query
     delete articleData.accessToken

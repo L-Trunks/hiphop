@@ -15,6 +15,7 @@ const rotationImgRouter = require('./routes/rotationImg');
 const searchRouter = require('./routes/search');
 const uploadRouter = require('./routes/upload');
 const messageRouter = require('./routes/message');
+const keywordsRouter = require('./routes/keywords');
 const middles = require('./middles/middles');
 
 const app = express();
@@ -30,16 +31,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(middles.cors);
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/danceSort', danceSortRouter);
-app.use('/article', articleRouter);
-app.use('/video', videoRouter);
-app.use('/articleInfo', articleInfoRouter);
-app.use('/videoInfo', videoInfoRouter);
-app.use('/rotationImg', rotationImgRouter);
-app.use('/search', searchRouter);
-app.use('/upload', uploadRouter);
-app.use('/message', messageRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/danceSort', danceSortRouter);
+app.use('/api/article', articleRouter);
+app.use('/api/video', videoRouter);
+app.use('/api/articleInfo', articleInfoRouter);
+app.use('/api/videoInfo', videoInfoRouter);
+app.use('/api/rotationImg', rotationImgRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/upload', uploadRouter);
+app.use('/api/message', messageRouter);
+app.use('/api/keywords', keywordsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

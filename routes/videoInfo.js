@@ -4,7 +4,7 @@ const router = express.Router();
 import errorNumber from '../config/errorNum'
 const token = require('../token/token') //引入
 const videoInfoService = require('../services/videoInfoService')
-//点赞文章
+//点赞视频
 router.get('/add_goods', function (req, res, next) {
     let accessToken = req.query.accessToken
     let videoData = req.query
@@ -71,7 +71,7 @@ router.get('/get_goods_status', function (req, res, next) {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
 });
-//收藏文章
+//收藏视频
 router.get('/add_collect', function (req, res, next) {
     let accessToken = req.query.accessToken
     let videoData = req.query
@@ -139,7 +139,7 @@ router.get('/get_collect_list', function (req, res, next) {
 });
 
 //添加评论
-router.get('/add_comments', function (req, res, next) {
+router.post('/add_comments', function (req, res, next) {
     let accessToken = req.query.accessToken
     let videoData = req.query
     delete videoData.accessToken
