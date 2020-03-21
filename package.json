@@ -12,7 +12,9 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "multer": "^0.1.8"
+    "multer": "^0.1.8",
+    "express-jwt": "^5.3.1",
+    "formidable": "^1.2.1"
   },
   "devDependencies": {
     "babel-preset-env": "^1.7.0"
