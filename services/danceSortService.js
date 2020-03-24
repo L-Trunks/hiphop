@@ -82,7 +82,10 @@ function updateSort(sortData, callback) {
 
 function selectSort(sortData, callback) {
     CONNECT.connect().then(res => {
-        DANCESORTMODEL.find(sortData).aggregate([
+        DANCESORTMODEL.aggregate([
+            {
+                $match:sortData
+            },  
             {
                 $lookup: {
                     from: "user",

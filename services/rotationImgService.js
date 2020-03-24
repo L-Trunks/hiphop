@@ -32,7 +32,7 @@ function addRotationImg(rotationImgData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -52,7 +52,7 @@ function deleteRotationImg(rotationImgData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -72,7 +72,7 @@ function updateRotationImg(rotationImgData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -81,7 +81,10 @@ function updateRotationImg(rotationImgData, callback) {
 
 function selectRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
-        ROTATIONIMGMODEL.find(rotationImgData).aggregate([
+        ROTATIONIMGMODEL.aggregate([
+            {
+                $match: rotationImgData
+            },
             {
                 $lookup: {
                     from: "user",
@@ -101,7 +104,7 @@ function selectRotationImg(rotationImgData, callback) {
             });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }

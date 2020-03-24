@@ -6,7 +6,8 @@ const connect = () => {
     return new Promise((res, rej) => {
         try {
             console.log(API.db)
-            mongoose.connect(API.db, (err) => {
+            mongoose.Promise = global.Promise; 
+            mongoose.connect(API.db,{useMongoClient: true}, (err) => {
                 if (err) {
                     rej(errorNum.DB_CONNECT())
                 } else {

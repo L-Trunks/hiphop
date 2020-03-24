@@ -6,7 +6,8 @@ const token = require('../token/token') //引入
 const searchService = require('../services/searchService')
 //获取视频结果
 router.get('/get_video_result_list', function (req, res, next) {
-    searchService.getResultVideoList({},
+    let data = req.query
+    searchService.getResultVideoList(data,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error) )
@@ -21,7 +22,7 @@ router.get('/get_video_result_list', function (req, res, next) {
 
 //获取文章结果
 router.get('/get_article_result_list', function (req, res, next) {
-    searchService.getResultArticleList({},
+    searchService.getResultArticleList(req.query,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error) )

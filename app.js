@@ -17,9 +17,10 @@ const uploadRouter = require('./routes/upload');
 const messageRouter = require('./routes/message');
 const keywordsRouter = require('./routes/keywords');
 const middles = require('./middles/middles');
-
+const bodyParser = require('body-parser');
 const app = express();
-
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

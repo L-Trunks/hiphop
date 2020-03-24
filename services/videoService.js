@@ -86,7 +86,7 @@ function selectVideo(videoData, callback) {
         _filter = { '_id': videoData._id };
     }
     CONNECT.connect().then(res => {
-        VIDEOMODEL.find(filter, (err, data) => {
+        VIDEOMODEL.find(_filter, (err, data) => {
             if (err) {
                 callback(err, data)
                 //查询错误
