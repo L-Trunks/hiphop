@@ -109,9 +109,30 @@ function selectRotationImg(rotationImgData, callback) {
 
 }
 
+//更新图片状态
+function updatImgstatus(rotationImgData, callback) {
+    CONNECT.connect().then(res => {
+        ROTATIONIMGMODEL.update({ _id: { $in: rotationImgData[imgIdArr] } }, { $set: { status: rotationImgData.status } }, false, true, (err, data) => {
+            mongoose.disconnect()
+            if (err) {
+                callback(err, data)
+                //抛出异常
+            } else {
+                console.log(data)
+                callback(err, data)
+            }
+        });
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+
+}
+
 module.exports = {
     addRotationImg: addRotationImg,
     deleteRotationImg: deleteRotationImg,
     updateRotationImg: updateRotationImg,
-    selectRotationImg: selectRotationImg
+    selectRotationImg: selectRotationImg,
+    updatImgstatus:updatImgstatus
 }

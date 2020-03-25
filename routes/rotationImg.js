@@ -95,7 +95,33 @@ router.post('/add_rotation_img', function (req, res, next) {
                     next(error);
                 } else {
                     console.log(JSON.stringify(error) , '数据::::' + data)
-                    if (data.rotationImgname) {
+                    if (data) {
+                        res.json({ code: '200', data: data });
+                    } else {
+                        res.json(data);
+                    }
+                }
+            })
+    } else {
+        res.json(errorNumber.TOKEN_TIME_OUT())
+    }
+});
+
+//更新图片状态
+router.post('/update_img_status', function (req, res, next) {
+    let accessToken = req.query.accessToken
+    let rotationImgData = req.query
+    delete rotationImgData.accessToken
+    console.log(rotationImgData)
+    if (token.checkToken(accessToken)) {
+        rotationImgService.updatImgstatus(rotationImgData,
+            function (error, data) {
+                if (error) {
+                    console.log('出现错误:' + JSON.stringify(error) )
+                    next(error);
+                } else {
+                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    if (data) {
                         res.json({ code: '200', data: data });
                     } else {
                         res.json(data);

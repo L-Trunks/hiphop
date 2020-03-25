@@ -6,5 +6,7 @@ const rotationImgSchema = new mongoose.Schema({
     imgurl:String,
     createtime:{ type: Date, default: Date.now },
     userid:String,
+    status:String,
 }, {collection: 'rotationimg'});
 module.exports = mongoose.model('rotationimg', rotationImgSchema);
+//Status状态　0:未上架　1:已上架　2:上架中
