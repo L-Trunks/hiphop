@@ -92,6 +92,5 @@ router.post('/update_message', function (req, res, next) {
     } else {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
-console.log(ds)
 });
 module.exports = router;
