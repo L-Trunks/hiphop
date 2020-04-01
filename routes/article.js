@@ -120,4 +120,21 @@ router.post('/add_article', function (req, res, next) {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
 });
+
+//浏览量加1
+router.post('/add_article_look', function (req, res, next) {
+    let articleData = req.query
+    console.log(articleData)
+    videoService.addArticleLook(articleData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data });
+            }
+        })
+
+});
 module.exports = router;

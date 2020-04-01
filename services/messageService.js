@@ -8,7 +8,7 @@ function addMessage(messageData, callback) {
     CONNECT.connect().then(res => {
         MESSAGEMODEL.find(messageData, (err, data) => {
             if (err) {
-                callback(err,data)
+                callback(err, data)
                 //抛出异常
             } else {
                 //data是我们查数据库得到的数据，没有查到为[]
@@ -20,16 +20,16 @@ function addMessage(messageData, callback) {
                             callback(err, data)
                             //抛出异常
                         } else {
-                            callback(err,data)
+                            callback(err, data)
                         }
                     });
                 } else {
-                    console.log(data+'该信息已存在')
-                    
+                    console.log(data + '该信息已存在')
+
                 }
             }
         });
-        
+
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
@@ -39,13 +39,13 @@ function addMessage(messageData, callback) {
 //更新消息
 function updateMessage(messageData, callback) {
     CONNECT.connect().then(res => {
-        MESSAGEMODEL.update({_id:messageData[_id]},{$set:messageData}, (err, data) => {
+        MESSAGEMODEL.update({ _id: messageData[_id] }, { $set: messageData }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
                 //抛出异常
             } else {
-                callback(err,data)
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -64,7 +64,7 @@ function deleteMessage(messageData, callback) {
                 callback(err, data)
                 //抛出异常
             } else {
-                callback(err,data)
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -77,15 +77,28 @@ function deleteMessage(messageData, callback) {
 //根据用户id获取消息列表
 function selectMessage(messageData, callback) {
     CONNECT.connect().then(res => {
-        MESSAGEMODEL.find(messageData, (err, data) => {
-            mongoose.disconnect()
-            if (err) {
-                callback(err, data)
-                //抛出异常
-            } else {
-                callback(err,data)
-            }
-        });
+        MESSAGEMODEL.aggregate([
+            {
+                $match: messageData
+
+            },
+            {
+                $lookup: {
+                    from: "user",
+                    localField: "from",
+                    foreignField: "_id",
+                    as: "fromUser"
+                },
+            },], (err, data) => {
+                mongoose.disconnect()
+                if (err) {
+                    callback(err, data)
+                    //抛出异常
+                } else {
+                    console.log(data)
+                    callback(err, data)
+                }
+            });
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
@@ -94,8 +107,8 @@ function selectMessage(messageData, callback) {
 }
 module.exports = {
     addMessage: addMessage,
-    updateMessage:updateMessage,
-    deleteMessage:deleteMessage,
-    selectMessage:selectMessage
+    updateMessage: updateMessage,
+    deleteMessage: deleteMessage,
+    selectMessage: selectMessage
 
 };

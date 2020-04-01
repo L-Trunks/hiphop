@@ -16,6 +16,8 @@ const searchRouter = require('./routes/search');
 const uploadRouter = require('./routes/upload');
 const messageRouter = require('./routes/message');
 const keywordsRouter = require('./routes/keywords');
+const noticeRouter = require('./routes/notice');
+const letterRouter = require('./routes/letter');
 const middles = require('./middles/middles');
 const bodyParser = require('body-parser');
 const app = express();
@@ -43,6 +45,8 @@ app.use('/api/search', searchRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/message', messageRouter);
 app.use('/api/keywords', keywordsRouter);
+app.use('/api/notice', noticeRouter);
+app.use('/api/letter', letterRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

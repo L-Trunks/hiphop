@@ -9,7 +9,7 @@ function addArticle(articleData, callback) {
             {
                 // 查询条件
                 $match: articleData
-                
+
             },
             {
                 $lookup: {
@@ -123,7 +123,7 @@ function selectArticle(articleData, callback) {
         ARTICLEMODEL.aggregate([{
             // 查询条件
             $match: _filter
-            
+
         },
         {
             $lookup: {
@@ -188,7 +188,7 @@ function getArticleInfoById(articleData, callback) {
         ARTICLEMODEL.aggregate([
             {
                 $match: articleData
-                
+
             },
             {
                 $lookup: {
@@ -222,10 +222,30 @@ function getArticleInfoById(articleData, callback) {
 
 }
 
+//添加浏览量
+function addArticleLook(articleData, callback) {
+    CONNECT.connect().then(res => {
+        ARTICLEMODEL.update({ _id: articleData['_id'] }, { $set: { lookcount: articleData.lookcount + 1 } }, (err, data) => {
+            mongoose.disconnect()
+            if (err) {
+                callback(err, data)
+                //抛出异常
+            } else {
+                console.log(data)
+                callback(err, data)
+            }
+        });
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+
+}
 module.exports = {
     addArticle: addArticle,
     deleteArticle: deleteArticle,
     updateArticle: updateArticle,
     selectArticle: selectArticle,
-    getArticleInfoById: getArticleInfoById
+    getArticleInfoById: getArticleInfoById,
+    addArticleLook: addArticleLook
 }

@@ -9,8 +9,9 @@ const articleSchema = new mongoose.Schema({
     articlepermission:Boolean,
     banreason:String,
     userid:String,
-    goodscount:Number,
-    commentscount:Number,
-    collectscount:Number
+    goodscount:{ type: Number, default: 0 },
+    commentscount:{ type: Number, default: 0 },
+    collectscount:{ type: Number, default: 0 },
+    lookscount:{ type: Number, default: 0 }
 }, {collection: 'article'});
 module.exports = mongoose.model('article', articleSchema);

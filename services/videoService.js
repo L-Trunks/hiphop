@@ -159,7 +159,7 @@ function selectVideo(videoData, callback) {
 //根据id获取视频信息
 function getVideoInfoById(videoData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEMODEL.aggregate([
+        VIDEOMODEL.aggregate([
             {
                 $match: videoData
                 
@@ -195,10 +195,30 @@ function getVideoInfoById(videoData, callback) {
 
 }
 
+//添加浏览量
+function addVideoLook(videoData, callback) {
+    CONNECT.connect().then(res => {
+        VIDEOMODEL.update({ _id: videoData['_id'] }, { $set: { lookcount: videoData.lookcount + 1 } }, (err, data) => {
+            mongoose.disconnect()
+            if (err) {
+                callback(err, data)
+                //抛出异常
+            } else {
+                console.log(data)
+                callback(err, data)
+            }
+        });
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+
+}
 module.exports = {
     addVideo: addVideo,
     deleteVideo: deleteVideo,
     updateVideo: updateVideo,
     selectVideo: selectVideo,
-    getVideoInfoById:getVideoInfoById
+    getVideoInfoById:getVideoInfoById,
+    addVideoLook:addVideoLook
 }
