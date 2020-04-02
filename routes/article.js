@@ -6,15 +6,15 @@ const token = require('../token/token') //引入
 const articleService = require('../services/articleService')
 //获取所有文章
 router.get('/get_all_article_list', function (req, res, next) {
-    // let ArticleData = req.query
-    // console.log(ArticleData)
-    articleService.selectArticle({},
+    let articleData = req.query
+    console.log(articleData)
+    articleService.selectArticle(articleData,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(JSON.stringify(error) , '数据::::' + data)
+                // console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -54,9 +54,8 @@ router.get('/get_article_info_by_id', function (req, res, next) {
 });
 //修改文章信息
 router.post('/update_article', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let articleData = req.query
-    delete articleData.accessToken
+    let accessToken = req.get('accessToken')
+    let articleData = req.body
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleService.updateArticle(articleData,
@@ -76,9 +75,9 @@ router.post('/update_article', function (req, res, next) {
 });
 //删除文章
 router.post('/delete_article', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let articleData = req.query
-    delete articleData.accessToken
+    let accessToken = req.get('accessToken')
+    let articleData = req.body
+    
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleService.deleteArticle(articleData,
@@ -97,9 +96,9 @@ router.post('/delete_article', function (req, res, next) {
 });
 //添加文章
 router.post('/add_article', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let articleData = req.query
-    delete articleData.accessToken
+    let accessToken = req.get('accessToken')
+    let articleData = req.body
+    
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleService.addArticle(articleData,
@@ -123,7 +122,7 @@ router.post('/add_article', function (req, res, next) {
 
 //浏览量加1
 router.post('/add_article_look', function (req, res, next) {
-    let articleData = req.query
+    let articleData = req.body
     console.log(articleData)
     videoService.addArticleLook(articleData,
         function (error, data) {

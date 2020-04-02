@@ -7,9 +7,9 @@ const messageService = require('../services/messageService')
 
 //新增消息
 router.post('/add_message', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let messageData = req.query
-    delete messageData.accessToken
+    let accessToken = req.get('accessToken')
+    let messageData = req.body
+    
     console.log(messageData)
     if (token.checkToken(accessToken)) {
         messageService.addMessage(messageData,
@@ -29,9 +29,9 @@ router.post('/add_message', function (req, res, next) {
 });
 //根据用户id获取消息列表
 router.get('/get_message_list_by_user', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let messageData = req.query
-    delete messageData.accessToken
+    
     console.log(messageData)
     if (token.checkToken(accessToken)) {
         messageService.selectMessage(messageData,
@@ -52,9 +52,9 @@ router.get('/get_message_list_by_user', function (req, res, next) {
 
 //删除消息
 router.get('/delete_message', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let messageData = req.query
-    delete messageData.accessToken
+    
     console.log(messageData)
     if (token.checkToken(accessToken)) {
         messageService.deleteMessage(messageData,
@@ -74,9 +74,9 @@ router.get('/delete_message', function (req, res, next) {
 });
 //更新消息
 router.post('/update_message', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let messageData = req.query
-    delete messageData.accessToken
+    let accessToken = req.get('accessToken')
+    let messageData = req.body
+    
     console.log(messageData)
     if (token.checkToken(accessToken)) {
         messageService.updateMessage(messageData,

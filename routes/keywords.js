@@ -7,9 +7,8 @@ const keywordService = require('../services/keywordService')
 
 //添加关键字
 router.post('/add_keyword', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let wordData = req.query
-    delete wordData.accessToken
+    let accessToken = req.get('accessToken')
+    let wordData = req.body
     console.log(wordData)
     if (token.checkToken(accessToken)) {
         keywordService.addKeyword(wordData,
@@ -30,9 +29,9 @@ router.post('/add_keyword', function (req, res, next) {
 
 //删除关键字
 router.get('/delete_keyword', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let wordData = req.query
-    delete wordData.accessToken
+    
     console.log(wordData)
     if (token.checkToken(accessToken)) {
         keywordService.deleteKeyword(wordData,
@@ -53,9 +52,9 @@ router.get('/delete_keyword', function (req, res, next) {
 
 //编辑关键字
 router.post('/update_keyword', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let wordData = req.query
-    delete wordData.accessToken
+    let accessToken = req.get('accessToken')
+    let wordData = req.body
+    
     console.log(wordData)
     if (token.checkToken(accessToken)) {
         keywordService.updateKeyword(wordData,
@@ -76,9 +75,9 @@ router.post('/update_keyword', function (req, res, next) {
 
 //获取所有关键字
 router.get('/get_all_keywords', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let wordData = req.query
-    delete wordData.accessToken
+    
     console.log(wordData)
     if (token.checkToken(accessToken)) {
         keywordService.selectKeyword({},

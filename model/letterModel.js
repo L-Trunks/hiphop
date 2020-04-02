@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+let Schema = mongoose.Schema;
 const letterSchema = new mongoose.Schema({
-    from:String,
-    to:String,
+    from:Schema.Types.ObjectId,
+    to:Schema.Types.ObjectId,
     letter:String,
     createtime:{ type: Date, default: Date.now },
 }, {collection: 'letter'});

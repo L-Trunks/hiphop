@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
+let Schema = mongoose.Schema;
 const articleInfoSchema = new mongoose.Schema({
-    userid:String,
-    articleid:String,
+    userid:Schema.Types.ObjectId,
+    articleid:Schema.Types.ObjectId,
     type:String,
     createtime:{ type: Date, default: Date.now },
-    from:String,
-    to:String,
+    from:Schema.Types.ObjectId,
+    to:Schema.Types.ObjectId,
     title:String,
     commmentInfo:String,
-    parentid:String
+    parentid:Schema.Types.ObjectId
 }, {collection: 'articleInfo'});
 module.exports = mongoose.model('articleInfo', articleInfoSchema);
 //type 0:点赞 1:收藏 2:评论

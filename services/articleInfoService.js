@@ -111,12 +111,12 @@ function removeCollect(articleData, callback) {
 }
 //获取收藏列表
 function getCollectList(articleData, callback) {
-    let _num = articleData.page_size;//每页几条
+    let _num = +articleData['page_size'];//每页几条
     let _total = 0;
-    let _skip = articleData.page_no * _num;
-    let _filter = { userid: articleData.userid, type: articleData.type };
+    let _skip = +articleData['page_no'] * _num;
+    let _filter = { userid: mongoose.Types.ObjectId(articleData['userid']), type: articleData.type };
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.find(filter, (err, data) => {
+        ARTICLEINFOMODEL.find(_filter, (err, data) => {
             if (err) {
                 callback(err, data)
                 //查询错误
@@ -124,10 +124,7 @@ function getCollectList(articleData, callback) {
                 _total = data.length;//获得总条数
             }
         })
-        ARTICLEINFOMODEL.aggregate([{
-            // 查询条件
-            $match: _filter
-        },
+        ARTICLEINFOMODEL.aggregate([
         {
             $lookup: {
                 from: "user",
@@ -143,6 +140,10 @@ function getCollectList(articleData, callback) {
                 foreignField: "_id",
                 as: "articleUser"
             },
+        },
+        {
+            // 查询条件
+            $match: _filter
         },
         {
             // 排序
@@ -171,7 +172,7 @@ function getCollectList(articleData, callback) {
                 console.log(data)
                 //格式化数据
                 const page = {
-                    page_no: _params.page_no + 1,
+                    page_no: articleData['page_no'] + 1,
                     page_size: _num,
                     total: _total,
                     data: data
@@ -206,8 +207,8 @@ function addComments(articleData, callback) {
 //查询评论列表
 function selectComments(articleData, callback) {
     CONNECT.connect().then(res => {
-        let _num = articleData.page_size;//每页几条
-        let _skip = articleData.page_no * _num;
+        let _num = +articleData['page_size'];//每页几条
+        let _skip = +articleData['page_no'] * _num;
         let _total = 0
         let _filter = { userid: articleData.userid, type: articleData.type, parentId: 0 };
         let data = []
@@ -263,7 +264,7 @@ function selectComments(articleData, callback) {
         mongoose.disconnect()
         //格式化数据
         const page = {
-            page_no: _params.page_no + 1,
+            page_no: articleData['page_no'] + 1,
             page_size: _num,
             total: _total,
             data: data
@@ -274,8 +275,8 @@ function selectComments(articleData, callback) {
         callback(err, { desc: '链接数据库失败' })
     })
 }
-//根据文章获取点赞评论收藏数
 
+//根据文章获取点赞评论收藏数
 function getCounts(articleData, callback) {
     CONNECT.connect().then(res => {
         ARTICLEINFOMODEL.find(articleData, (err, data, numAffected) => {

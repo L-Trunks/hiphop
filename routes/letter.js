@@ -7,9 +7,9 @@ const letterService = require('../services/letterService')
 
 //发送私信
 router.post('/send_letter', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let userData = req.query
-    delete userData.accessToken
+    let accessToken = req.get('accessToken')
+    let userData = req.body
+    
     console.log(userData)
     if (token.checkToken(accessToken)) {
         letterService.addLetter(userData,
@@ -29,9 +29,9 @@ router.post('/send_letter', function (req, res, next) {
 
 //根据用户查询私信列表
 router.post('/select_letter_list_by_user', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let userData = req.query
-    delete userData.accessToken
+    let accessToken = req.get('accessToken')
+    let userData = req.body
+    
     console.log(userData)
     if (token.checkToken(accessToken)) {
         letterService.selectLetter(userData,
@@ -51,9 +51,9 @@ router.post('/select_letter_list_by_user', function (req, res, next) {
 
 //删除会话
 router.post('/delete_letter_with_user', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let userData = req.query
-    delete userData.accessToken
+    let accessToken = req.get('accessToken')
+    let userData = req.body
+    
     console.log(userData)
     if (token.checkToken(accessToken)) {
         letterService.deleteLetterWithUser(userData,

@@ -27,9 +27,6 @@ function selectLetter(userData, callback) {
     CONNECT.connect().then(res => {
         LETTERMODEL.aggregate([
             {
-                $match: userData
-            },
-            {
                 // 分组
                 $group: {
                     // 多字段分组，_id后是分组字段，分组字段可写为null来将所有结果聚合到一起
@@ -43,7 +40,9 @@ function selectLetter(userData, callback) {
                     foreignField: "_id",
                     as: "toUser"
                 },
-            },], (err, data) => {
+            }, {
+                $match: userData
+            }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
                     callback(err, data)

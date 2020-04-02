@@ -6,9 +6,9 @@ const token = require('../token/token') //引入
 const videoInfoService = require('../services/videoInfoService')
 //点赞视频
 router.get('/add_goods', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addGoods(videoData,
@@ -28,9 +28,9 @@ router.get('/add_goods', function (req, res, next) {
 });
 //取消点赞
 router.get('/remove_goods', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.removeGoods(videoData,
@@ -51,9 +51,9 @@ router.get('/remove_goods', function (req, res, next) {
 
 //获取点赞状态
 router.get('/get_goods_status', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.getGoodsStatus(videoData,
@@ -73,9 +73,9 @@ router.get('/get_goods_status', function (req, res, next) {
 });
 //收藏视频
 router.get('/add_collect', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addCollect(videoData,
@@ -95,9 +95,9 @@ router.get('/add_collect', function (req, res, next) {
 });
 //取消收藏
 router.get('/remove_collect', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.removeCollect(videoData,
@@ -117,9 +117,9 @@ router.get('/remove_collect', function (req, res, next) {
 });
 //获取收藏列表
 router.get('/get_collect_list', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.getCollectList(videoData,
@@ -140,9 +140,9 @@ router.get('/get_collect_list', function (req, res, next) {
 
 //添加评论
 router.post('/add_comments', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let videoData = req.query
-    delete videoData.accessToken
+    let accessToken = req.get('accessToken')
+    let videoData = req.body
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addComments(videoData,
@@ -162,9 +162,9 @@ router.post('/add_comments', function (req, res, next) {
 });
 //查询评论列表
 router.get('/select_comments', function (req, res, next) {
-    let accessToken = req.query.accessToken
+    let accessToken = req.get('accessToken')
     let videoData = req.query
-    delete videoData.accessToken
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.selectComments(videoData,

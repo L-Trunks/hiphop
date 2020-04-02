@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+let Schema = mongoose.Schema;
 const userSchema = new mongoose.Schema({
     id: String,
     nickname:String,

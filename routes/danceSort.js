@@ -14,7 +14,7 @@ router.get('/get_all_dance_sort_list', function (req, res, next) {
                 console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(JSON.stringify(error) , '数据::::' + data)
+                // console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -40,9 +40,8 @@ router.get('/get_dance_sort_list_by_info', function (req, res, next) {
 
 //修改舞种信息
 router.post('/update_dance_sort', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let sortData = req.query
-    delete sortData.accessToken
+    let accessToken = req.get('accessToken')
+    let sortData = req.body
     console.log(sortData)
     if (token.checkToken(accessToken)) {
         danceSortService.updateSort(sortData,
@@ -62,9 +61,8 @@ router.post('/update_dance_sort', function (req, res, next) {
 });
 //删除舞种
 router.post('/delete_dance_sort', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let sortData = req.query
-    delete sortData.accessToken
+    let accessToken = req.get('accessToken')
+    let sortData = req.body
     console.log(sortData)
     if (token.checkToken(accessToken)) {
         danceSortService.deleteSort(sortData,
@@ -83,10 +81,9 @@ router.post('/delete_dance_sort', function (req, res, next) {
 });
 //添加舞种
 router.post('/add_dance_sort', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let sortData = req.query
-    delete sortData.accessToken
-    console.log(sortData)
+    let accessToken = req.get('accessToken')
+    let sortData = req.body
+    console.log(sortData,accessToken)
     if (token.checkToken(accessToken)) {
         danceSortService.addSort(sortData,
             function (error, data) {

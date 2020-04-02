@@ -39,7 +39,7 @@ function addMessage(messageData, callback) {
 //更新消息
 function updateMessage(messageData, callback) {
     CONNECT.connect().then(res => {
-        MESSAGEMODEL.update({ _id: messageData[_id] }, { $set: messageData }, (err, data) => {
+        MESSAGEMODEL.update({ _id: mongoose.Types.ObjectId(messageData[_id]) }, { $set: messageData }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -79,7 +79,7 @@ function selectMessage(messageData, callback) {
     CONNECT.connect().then(res => {
         MESSAGEMODEL.aggregate([
             {
-                $match: messageData
+                $match: {userid:mongoose.Types.ObjectId(messageData['userid'])}
 
             },
             {

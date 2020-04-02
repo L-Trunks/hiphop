@@ -64,7 +64,7 @@ function deleteKeyword(wordData, callback) {
 function updateKeyword(wordData, callback) {
     CONNECT.connect().then(res => {
 
-        KEYWORDMODEL.update({ _id: wordData['_id'] }, { $set: wordData }, (err, data) => {
+        KEYWORDMODEL.update({ _id: mongoose.Types.ObjectId(wordData['_id'] )}, { $set: wordData }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -84,17 +84,16 @@ function selectKeyword(wordData, callback) {
 
         KEYWORDMODEL.aggregate([
             {
-                $match: wordData
-
-            },
-            {
                 $lookup: {
                     from: "user",
                     localField: "userid",
                     foreignField: "_id",
                     as: "keywordUser"
                 },
-            },], (err, data) => {
+            },{
+                $match: wordData
+
+            }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
                     callback(err, data)

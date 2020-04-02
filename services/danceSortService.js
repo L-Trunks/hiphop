@@ -33,7 +33,7 @@ function addSort(sortData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -53,7 +53,7 @@ function deleteSort(sortData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -61,7 +61,7 @@ function deleteSort(sortData, callback) {
 //修改舞种
 function updateSort(sortData, callback) {
     CONNECT.connect().then(res => {
-        DANCESORTMODEL.update({ _id: sortData['_id'] }, { $set: sortData }, (err, data) => {
+        DANCESORTMODEL.update({ _id: mongoose.Types.ObjectId(sortData['_id']) }, { $set: sortData }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -73,7 +73,7 @@ function updateSort(sortData, callback) {
         });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }
@@ -84,15 +84,14 @@ function selectSort(sortData, callback) {
     CONNECT.connect().then(res => {
         DANCESORTMODEL.aggregate([
             {
-                $match:sortData
-            },  
-            {
                 $lookup: {
                     from: "user",
                     localField: "userid",
                     foreignField: "_id",
                     as: "sortUser"
                 }
+            }, {
+                $match: sortData
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
@@ -105,7 +104,7 @@ function selectSort(sortData, callback) {
             });
     }).catch(err => {
         console.log(err)
-        callback(err, {desc:'链接数据库失败'})
+        callback(err, { desc: '链接数据库失败' })
     })
 
 }

@@ -46,17 +46,16 @@ function selectNotice(userData, callback) {
     CONNECT.connect().then(res => {
         NOTICEMODEL.aggregate([
             {
-                $match: userData
-
-            },
-            {
                 $lookup: {
                     from: "user",
                     localField: "to",
                     foreignField: "_id",
                     as: "noticeUser"
                 },
-            },], (err, data) => {
+            },{
+                $match: {from:mongoose.Types.ObjectId(userData['from'])}
+
+            }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
                     callback(err, data)
@@ -75,6 +74,4 @@ module.exports = {
     addNotice: addNotice,
     removeNotice: removeNotice,
     selectNotice: selectNotice
-
-
 };

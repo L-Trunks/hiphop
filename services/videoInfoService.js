@@ -111,12 +111,12 @@ function removeCollect(videoData, callback) {
 }
 //获取收藏列表
 function getCollectList(videoData, callback) {
-    let _num = videoData.page_size;//每页几条
+    let _num = +videoData['page_size'];//每页几条
     let _total = 0;
-    let _skip = videoData.page_no * _num;
-    let _filter = { userid: videoData.userid, type: videoData.type };
+    let _skip = +videoData['page_no'] * _num;
+    let _filter = { userid: videoData['userid'], type: videoData['type'] };
     CONNECT.connect().then(res => {
-        VIDEOINFOMODEL.find(filter, (err, data) => {
+        VIDEOINFOMODEL.find(_filter, (err, data) => {
             if (err) {
                 callback(err, data)
                 //查询错误
@@ -124,10 +124,7 @@ function getCollectList(videoData, callback) {
                 _total = data.length;//获得总条数
             }
         })
-        VIDEOINFOMODEL.aggregate([{
-            // 查询条件
-            $match: _filter
-        },
+        VIDEOINFOMODEL.aggregate([
         {
             $lookup: {
                 from: "user",
@@ -143,6 +140,9 @@ function getCollectList(videoData, callback) {
                 foreignField: "_id",
                 as: "videoUser"
             },
+        },{
+            // 查询条件
+            $match: _filter
         },
         {
             // 排序
@@ -171,7 +171,7 @@ function getCollectList(videoData, callback) {
                 console.log(data)
                 //格式化数据
                 const page = {
-                    page_no: _params.page_no + 1,
+                    page_no: videoData['page_no'] + 1,
                     page_size: _num,
                     total: _total,
                     data: data
@@ -206,10 +206,10 @@ function addComments(videoData, callback) {
 //查询评论列表
 function selectComments(videoData, callback) {
     CONNECT.connect().then(res => {
-        let _num = videoData.page_size;//每页几条
+        let _num = +videoData['page_size'];//每页几条
         let _total = 0;
-        let _skip = videoData.page_no * _num;
-        let _filter = { userid: videoData.userid, type: videoData.type, parentId: 0 };
+        let _skip = +videoData['page_no'] * _num;
+        let _filter = { userid: videoData['userid'], type: videoData['type'], parentId: 0 };
         let data = []
         VIDEOINFOMODEL
             .find(_filter)
@@ -265,7 +265,7 @@ function selectComments(videoData, callback) {
         console.log(data)
         //格式化数据
         const page = {
-            page_no: _params.page_no + 1,
+            page_no: videoData['page_no'] + 1,
             page_size: _num,
             total: _total,
             data: data

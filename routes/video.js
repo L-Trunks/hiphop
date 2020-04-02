@@ -6,15 +6,15 @@ const token = require('../token/token') //引入
 const videoService = require('../services/videoService')
 //获取所有视频
 router.get('/get_all_video_list', function (req, res, next) {
-    // let VideoData = req.query
-    // console.log(VideoData)
-    videoService.selectVideo({},
+    let videoData = req.query
+    console.log(videoData)
+    videoService.selectVideo(videoData,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error))
                 next(error);
             } else {
-                console.log(JSON.stringify(error), '数据::::' + data)
+                // console.log(JSON.stringify(error), '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }
@@ -39,9 +39,9 @@ router.get('/get_video_list_by_user', function (req, res, next) {
 
 //修改视频信息
 router.post('/update_video', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let videoData = req.query
-    delete videoData.accessToken
+    let accessToken = req.get('accessToken')
+    let videoData = req.body
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoService.updateVideo(videoData,
@@ -61,9 +61,9 @@ router.post('/update_video', function (req, res, next) {
 });
 //删除视频
 router.post('/delete_video', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let videoData = req.query
-    delete videoData.accessToken
+    let accessToken = req.get('accessToken')
+    let videoData = req.body
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoService.deleteVideo(videoData,
@@ -82,9 +82,9 @@ router.post('/delete_video', function (req, res, next) {
 });
 //添加视频
 router.post('/add_video', function (req, res, next) {
-    let accessToken = req.query.accessToken
-    let videoData = req.query
-    delete videoData.accessToken
+    let accessToken = req.get('accessToken')
+    let videoData = req.body
+    
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoService.addVideo(videoData,
@@ -108,7 +108,7 @@ router.post('/add_video', function (req, res, next) {
 
 //浏览量加1
 router.post('/add_video_look', function (req, res, next) {
-    let videoData = req.query
+    let videoData = req.body
     console.log(videoData)
     videoService.addVideoLook(videoData,
         function (error, data) {

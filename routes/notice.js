@@ -24,9 +24,9 @@ router.get('/get_notice_list_by_user', function (req, res, next) {
 
 //关注用户
 router.post('/add_notice', function (req, res, next) {
-    let noticeData = req.query
-    let accessToken = req.query.accessToken
-    delete noticeData.accessToken
+    let noticeData = req.body
+    let accessToken = req.get('accessToken')
+    
     console.log(noticeData)
     if (token.checkToken(accessToken)) {
         noticelService.addNotice(noticeData,
@@ -47,9 +47,9 @@ router.post('/add_notice', function (req, res, next) {
 
 //取消关注
 router.post('/delete_notice', function (req, res, next) {
-    let noticeData = req.query
-    let accessToken = req.query.accessToken
-    delete noticeData.accessToken
+    let noticeData = req.body
+    let accessToken = req.get('accessToken')
+    
     console.log(noticeData)
     if (token.checkToken(accessToken)) {
         noticelService.removeNotice(noticeData,
