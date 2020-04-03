@@ -4,7 +4,7 @@ const router = express.Router();
 import errorNumber from '../config/errorNum'
 import { fuchsia } from 'color-name';
 const token = require('../token/token') //引入
-const tokenTimes = 3600 //token有效期 单位秒
+const tokenTimes = 604800 //token有效期 单位秒
 const userService = require('../services/userService')
 
 //登录
