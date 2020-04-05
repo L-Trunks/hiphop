@@ -33,15 +33,15 @@ function getResultVideoList(searchData, callback) {
                 $project: {
                     password: 0 // 返回结果不包含密码字段
                 }
+            },{
+                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
+                $skip: +_skip
             },
             {
                 // 查询条数
                 $limit: +_num
             },
-            {
-                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
-                $skip: +_skip
-            },
+            
             {
                 $sort: { '_id': -1 },// 按照 _id倒序排列
             }
@@ -94,15 +94,15 @@ function getResultArticleList(searchData, callback) {
             { $project: {
                 password: 0 // 返回结果不包含密码字段
             }
+            },{
+                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
+                $skip: +_skip
             },
             {
                 // 查询条数
                 $limit: +_num
             },
-            {
-                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
-                $skip: +_skip
-            },
+            
             {
                 $sort: { '_id': -1 },// 按照 _id倒序排列
             }

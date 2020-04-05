@@ -5,6 +5,7 @@ const videoSchema = new mongoose.Schema({
     videotitle: String,
     introduce: String,
     videourl: String,
+    firsturl:String,
     createtime: { type: Date, default: Date.now },
     userid: Schema.Types.ObjectId,
     sortid: Schema.Types.ObjectId,

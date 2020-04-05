@@ -10,6 +10,7 @@ function addArticle(articleData, callback) {
             if (err) {
                 callback(err, data)
             } else {
+                console.log(data)
                 ARTICLEMODEL.aggregate([
                     {
                         $lookup: {
@@ -28,7 +29,7 @@ function addArticle(articleData, callback) {
                         },
                     },{
                         // 查询条件
-                        $match: {article:articleData['article']}
+                        $match: {_id:mongoose.Types.ObjectId(data['_id'])}
 
                     },
                 ], (err, data, numAffected) => {
@@ -74,7 +75,7 @@ function deleteArticle(articleData, callback) {
 //修改文章
 function updateArticle(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEMODEL.update({ _id: articleData['_id'] }, { $set: articleData },(err,data)=>{
+        ARTICLEMODEL.update({ _id: mongoose.Types.ObjectId(articleData['_id'] )}, { $set: articleData },(err,data)=>{
             ARTICLEMODEL.aggregate([{
                 $lookup: {
                     from: "user",
@@ -120,8 +121,12 @@ function selectArticle(articleData, callback) {
     let _skip = +articleData['page_no'] * _num;
     let _filter = {};
     let _id = articleData['userid'];
+    let sortid = articleData['sortid']
+    console.log(_num,_skip)
     if (_id) {
-        _filter = { userid: articleData['userid'] };
+        _filter = { userid: mongoose.Types.ObjectId(articleData['userid'] )};
+    }else if(sortid){
+        _filter = { sortid: mongoose.Types.ObjectId(articleData['sortid']) };
     }
     console.log(_filter)
     CONNECT.connect().then(res => {
@@ -134,7 +139,6 @@ function selectArticle(articleData, callback) {
             }
         })
         ARTICLEMODEL.aggregate([
-            
             {
                 $lookup: {
                     from: "user",
@@ -156,22 +160,21 @@ function selectArticle(articleData, callback) {
                 $match: _filter
 
             },
-
             {
                 // 排序
                 $sort: {
                     // 倒序
                     "_id": -1
                 }
+            },{
+                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
+                $skip: _skip
             },
             {
                 // 查询条数
                 $limit: _num
             },
-            {
-                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
-                $skip: _skip
-            }], (err, data) => {
+            ], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
                     callback(err, data)
@@ -238,7 +241,7 @@ function getArticleInfoById(articleData, callback) {
 //添加浏览量
 function addArticleLook(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEMODEL.update({ _id: articleData['_id'] }, { $set: { lookcount: articleData.lookcount + 1 } }, (err, data) => {
+        ARTICLEMODEL.update({ _id: mongoose.Types.ObjectId(articleData['_id'] )}, { $set: { lookcount: articleData.lookcount + 1 } }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)

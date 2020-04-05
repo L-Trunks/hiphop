@@ -1,11 +1,12 @@
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
-import VIDEOMODEL from '../model/articleModel'
+import VIDEOMODEL from '../model/videoModel'
 import mongoose from 'mongoose';
 //上传视频
 function addVideo(videoData, callback) {
     CONNECT.connect().then(res => {
-        VIDEOMODEL.save(videoData, (err, data, numAffected) => {
+        const video = new VIDEOMODEL(videoData)
+        video.save((err, data, numAffected) => {
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -81,10 +82,14 @@ function selectVideo(videoData, callback) {
     let _total = 0;
     let _skip = +videoData['page_no'] * _num;
     let _filter = {};
-    let _id = mongoose.Types.ObjectId(videoData['_id']);
+    let _id = videoData['userid'];
+    let sortid =videoData['sortid'];
     if (_id) {
-        _filter = { '_id': mongoose.Types.ObjectId(videoData['_id']) };
+        _filter = { 'userid': mongoose.Types.ObjectId(videoData['userid']) };
+    } else if (sortid) {
+        _filter = { sortid: mongoose.Types.ObjectId(videoData['sortid']) };
     }
+    console.log(_filter)
     CONNECT.connect().then(res => {
         VIDEOMODEL.find(_filter, (err, data) => {
             if (err) {
@@ -113,7 +118,6 @@ function selectVideo(videoData, callback) {
             }, {
                 // 查询条件
                 $match: _filter
-
             },
             {
                 // 排序
@@ -121,19 +125,15 @@ function selectVideo(videoData, callback) {
                     // 倒序
                     "_id": -1
                 }
-            },
-            {
-                // 查询条数
-                $limit: _num
-            },
+            }, 
             {
                 // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
                 $skip: _skip
             },
             {
-                // 计数
-                $count: "count"
-            }], (err, data) => {
+                // 查询条数
+                $limit: _num
+            },], (err, data) => {
                 if (err) {
                     callback(err, data)
                     //抛出异常
@@ -177,7 +177,7 @@ function getVideoInfoById(videoData, callback) {
                     as: "articleSort"
                 },
             }, {
-                $match: videoData
+                $match: { _id: mongoose.Types.ObjectId(videoData['_id']) }
 
             },], (err, data) => {
                 if (err) {

@@ -150,15 +150,15 @@ function getCollectList(videoData, callback) {
                 // 倒序
                 "_id": -1
             }
+        },{
+            // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
+            $skip: _skip
         },
         {
             // 查询条数
             $limit: _num
         },
-        {
-            // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
-            $skip: _skip
-        },
+        
         {
             // 计数
             $count: "count"

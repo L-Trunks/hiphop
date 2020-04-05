@@ -6,7 +6,8 @@ import mongoose from 'mongoose';
 //点赞文章
 function addGoods(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+        const article = new ARTICLEINFOMODEL(articleData)
+        article.save(articleData, (err, data, numAffected) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -45,7 +46,7 @@ function removeGoods(articleData, callback) {
 
 function getGoodsStatus(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.find(articleData, (err, data, numAffected) => {
+        ARTICLEINFOMODEL.find({ userid: mongoose.Types.ObjectId(articleData['userid']), articleid: mongoose.Types.ObjectId(articleData['userid']) }, (err, data, numAffected) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -70,7 +71,8 @@ function getGoodsStatus(articleData, callback) {
 //收藏文章
 function addCollect(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+        const article = new ARTICLEINFOMODEL(articleData)
+        article.save(articleData, (err, data, numAffected) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -125,61 +127,61 @@ function getCollectList(articleData, callback) {
             }
         })
         ARTICLEINFOMODEL.aggregate([
-        {
-            $lookup: {
-                from: "user",
-                localField: "userid",
-                foreignField: "_id",
-                as: "collectUser"
+            {
+                $lookup: {
+                    from: "user",
+                    localField: "userid",
+                    foreignField: "_id",
+                    as: "collectUser"
+                },
             },
-        },
-        {
-            $lookup: {
-                from: "article",
-                localField: "articleid",
-                foreignField: "_id",
-                as: "articleUser"
+            {
+                $lookup: {
+                    from: "article",
+                    localField: "articleid",
+                    foreignField: "_id",
+                    as: "articleUser"
+                },
             },
-        },
-        {
-            // 查询条件
-            $match: _filter
-        },
-        {
-            // 排序
-            $sort: {
-                // 倒序
-                "_id": -1
-            }
-        },
-        {
-            // 查询条数
-            $limit: _num
-        },
-        {
-            // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
-            $skip: _skip
-        },
-        {
-            // 计数
-            $count: "count"
-        }], (err, data) => {
-            mongoose.disconnect()
-            if (err) {
-                callback(err, data)
-                //抛出异常
-            } else {
-                console.log(data)
-                //格式化数据
-                const page = {
-                    page_no: articleData['page_no'] + 1,
-                    page_size: _num,
-                    total: _total,
-                    data: data
-                };
-                callback(err, page)
-            }
-        });
+            {
+                // 查询条件
+                $match: _filter
+            },
+            {
+                // 排序
+                $sort: {
+                    // 倒序
+                    "_id": -1
+                }
+            }, {
+                // 跳过条数，管道中limit和skip的先后顺序会影响最后的输出条数，当前结果为3条
+                $skip: _skip
+            },
+            {
+                // 查询条数
+                $limit: _num
+            },
+
+            {
+                // 计数
+                $count: "count"
+            }], (err, data) => {
+                mongoose.disconnect()
+                if (err) {
+                    callback(err, data)
+                    //抛出异常
+                } else {
+                    console.log(data)
+                    //格式化数据
+                    const page = {
+                        page_no: articleData['page_no'] + 1,
+                        page_size: _num,
+                        total: _total,
+                        data: data
+                    };
+                    callback(err, page)
+                }
+            });
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
@@ -188,7 +190,8 @@ function getCollectList(articleData, callback) {
 //添加评论
 function addComments(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.save(articleData, (err, data, numAffected) => {
+        const article = new ARTICLEINFOMODEL(articleData)
+        article.save((err, data, numAffected) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -210,66 +213,64 @@ function selectComments(articleData, callback) {
         let _num = +articleData['page_size'];//每页几条
         let _skip = +articleData['page_no'] * _num;
         let _total = 0
-        let _filter = { userid: articleData.userid, type: articleData.type, parentId: 0 };
+        let _filter = { articleid: mongoose.Types.ObjectId(articleData['articleid']), type: articleData['type'], parentid: articleData['parentid'] };
         let data = []
-        ARTICLEINFOMODEL
-            .find(_filter)
-            .sort({ createtime: 1 })
-            .limit(+_num)
-            .skip(+_skip)
-            .select('-__v')
-            .lean(function (err, data) {
-                if (err) {
-                    console.log(err)
-                    callback(err)
-                } else {
-                    data = data
-                }
+        ARTICLEINFOMODEL.find(_filter, (err, data) => {
+            if (err) {
+                callback(err, data)
+                //查询错误
+            } else {
+                console.log(data)
+                _total = data.length;//获得总条数
+            }
+        })
+        ARTICLEINFOMODEL.aggregate([
+            {
+                $lookup: {
+                    from: "user",
+                    localField: "from",
+                    foreignField: "_id",
+                    as: "fromUser"
+                },
+            },
+            {
+                $lookup: {
+                    from: "user",
+                    localField: "to",
+                    foreignField: "_id",
+                    as: "toUser"
+                },
+            },
+            {
+                // 查询条件
+                $match: _filter
 
-            });
-        ARTICLEINFOMODEL
-            .find(_filter)
-            .count(function (err, data) {
-                if (err) {
-                    console.log(err)
-                    callback(err)
-                } else {
-                    _total = data
+            },
+            {
+                // 排序
+                $sort: {
+                    // 倒序
+                    "_id": -1
                 }
-            });
-        // 处理异步回调
-        let promises = data.map(item => {
-            return ARTICLEINFOMODEL.find({
-                parentId: item._id
-            }).select('-__v').lean()
+            }
+        ], (err, data) => {
+            if (err) {
+                callback(err, data)
+                //抛出异常
+            } else {
+                mongoose.disconnect()
+                //格式化数据
+                console.log('评论列表＋＋＋＋＋'+data)
+                const page = {
+                    page_no: +articleData['page_no'] + 1,
+                    page_size: _num,
+                    total: _total,
+                    data: data
+                };
+                callback(err, page)
+            }
         });
-
-        let list = []
-        Promise.all(promises).then(res => {
-            list = res
-        }).catch(err => {
-            console.log(err)
-            callback(err)
-        })
-        data.forEach(item => {
-            list.forEach(code => {
-                if (code.length > 0 && item._id == code[0].parentId) {
-                    item.items = code
-                } else {
-                    item.items = []
-                }
-            })
-        })
-        console.log(data)
-        mongoose.disconnect()
-        //格式化数据
-        const page = {
-            page_no: articleData['page_no'] + 1,
-            page_size: _num,
-            total: _total,
-            data: data
-        };
-        callback(err, page)
+        
     }).catch(err => {
         console.log(err)
         callback(err, { desc: '链接数据库失败' })
@@ -279,7 +280,7 @@ function selectComments(articleData, callback) {
 //根据文章获取点赞评论收藏数
 function getCounts(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEINFOMODEL.find(articleData, (err, data, numAffected) => {
+        ARTICLEINFOMODEL.find({ articleid: mongoose.Types.ObjectId(articleData) }, (err, data, numAffected) => {
             if (err) {
                 callback(err, data)
                 //数据库异常
@@ -299,7 +300,7 @@ function getCounts(articleData, callback) {
                             collectscount = collectscount + 1
                         }
                     })
-                    callback({ articleid: articleData['articleid'], goodscount: goodscount, commentscount: commentscount, collectscount: collectscount })
+                    callback({ articleid: mongoose.Types.ObjectId(articleData['articleid']), goodscount: goodscount, commentscount: commentscount, collectscount: collectscount })
                     ARTICLEMODEL.update({ _id: articleData['articleid'] },
                         { $set: { goodscount: goodscount, commentscount: commentscount, collectscount: collectscount } },
                         function (err, data) {

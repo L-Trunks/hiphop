@@ -8,8 +8,8 @@ const articleInfoSchema = new mongoose.Schema({
     from:Schema.Types.ObjectId,
     to:Schema.Types.ObjectId,
     title:String,
-    commmentInfo:String,
-    parentid:Schema.Types.ObjectId
+    commentinfo:String,
+    parentid:String
 }, {collection: 'articleInfo'});
 module.exports = mongoose.model('articleInfo', articleInfoSchema);
 //type 0:点赞 1:收藏 2:评论

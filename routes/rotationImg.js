@@ -85,7 +85,6 @@ router.post('/delete_rotation_img', function (req, res, next) {
 router.post('/add_rotation_img', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let rotationImgData = req.body
-    
     console.log(rotationImgData)
     if (token.checkToken(accessToken)) {
         rotationImgService.addRotationImg(rotationImgData,

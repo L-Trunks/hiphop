@@ -4,30 +4,17 @@ import ROTATIONIMGMODEL from '../model/rotationImgModel'
 import mongoose from 'mongoose';
 //添加图片
 function addRotationImg(rotationImgData, callback) {
+    
     CONNECT.connect().then(res => {
-        ROTATIONIMGMODEL.find(rotationImgData, (err, data) => {
+        const danceRotationImg = new ROTATIONIMGMODEL(rotationImgData);
+        danceRotationImg.save((err, data, numAffected) => {
+            mongoose.disconnect()
             if (err) {
                 callback(err, data)
-                //抛出异常
+                //数据库异常
             } else {
-                if (data == 0) {
-                    const danceRotationImg = new ROTATIONIMGMODEL(rotationImgData);
-                    danceRotationImg.save((err, data, numAffected) => {
-                        mongoose.disconnect()
-                        if (err) {
-                            callback(err, data)
-                            //数据库异常
-                        } else {
-                            //保存成功
-                            callback(err, data)
-                        }
-                    });
-                } else {
-                    mongoose.disconnect()
-                    console.log(data)
-                    callback(err, errorNumber.ROTATION_IMG_ALREADY())
-
-                }
+                //保存成功
+                callback(err, data)
             }
         });
     }).catch(err => {
@@ -81,18 +68,11 @@ function updateRotationImg(rotationImgData, callback) {
 
 function selectRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
-        if(rotationImgData['_id']){
+        if (rotationImgData['_id']) {
             rotationImgData['id'] = mongoose.Types.ObjectId(rotationImgData['_id'])
         }
         ROTATIONIMGMODEL.aggregate([
             {
-                $lookup: {
-                    from: "user",
-                    localField: "userid",
-                    foreignField: "_id",
-                    as: "rotationImgUser"
-                }
-            },{
                 $match: rotationImgData
             }], (err, data) => {
                 mongoose.disconnect()
@@ -114,7 +94,7 @@ function selectRotationImg(rotationImgData, callback) {
 //更新图片状态
 function updatImgstatus(rotationImgData, callback) {
     CONNECT.connect().then(res => {
-        rotationImgData[imgIdArr].map(i=>{
+        rotationImgData[imgIdArr].map(i => {
             i = mongoose.Types.ObjectId(i)
         })
         ROTATIONIMGMODEL.update({ _id: { $in: rotationImgData[imgIdArr] } }, { $set: { status: rotationImgData.status } }, false, true, (err, data) => {
@@ -139,5 +119,5 @@ module.exports = {
     deleteRotationImg: deleteRotationImg,
     updateRotationImg: updateRotationImg,
     selectRotationImg: selectRotationImg,
-    updatImgstatus:updatImgstatus
+    updatImgstatus: updatImgstatus
 }
