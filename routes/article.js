@@ -124,7 +124,7 @@ router.post('/add_article', function (req, res, next) {
 router.post('/add_article_look', function (req, res, next) {
     let articleData = req.body
     console.log(articleData)
-    videoService.addArticleLook(articleData,
+    articleService.addArticleLook(articleData,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error))

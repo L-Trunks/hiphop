@@ -4,7 +4,7 @@ import ROTATIONIMGMODEL from '../model/rotationImgModel'
 import mongoose from 'mongoose';
 //添加图片
 function addRotationImg(rotationImgData, callback) {
-    
+
     CONNECT.connect().then(res => {
         const danceRotationImg = new ROTATIONIMGMODEL(rotationImgData);
         danceRotationImg.save((err, data, numAffected) => {
@@ -68,12 +68,21 @@ function updateRotationImg(rotationImgData, callback) {
 
 function selectRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
+        let filter = {}
         if (rotationImgData['_id']) {
-            rotationImgData['id'] = mongoose.Types.ObjectId(rotationImgData['_id'])
+            filter = { _id: mongoose.Types.ObjectId(rotationImgData['_id']) }
         }
         ROTATIONIMGMODEL.aggregate([
             {
-                $match: rotationImgData
+                $lookup: {
+                    from: "user",
+                    localField: "userid",
+                    foreignField: "_id",
+                    as: "imgUser"
+                },
+            },
+            {
+                $match: filter
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {

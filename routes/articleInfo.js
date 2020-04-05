@@ -8,16 +8,16 @@ const articleInfoService = require('../services/articleInfoService')
 router.post('/add_goods', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.body
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.addGoods(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -30,16 +30,16 @@ router.post('/add_goods', function (req, res, next) {
 router.get('/remove_goods', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.query
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.removeGoods(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -53,16 +53,16 @@ router.get('/remove_goods', function (req, res, next) {
 router.get('/get_goods_status', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.query
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.getGoodsStatus(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -75,16 +75,16 @@ router.get('/get_goods_status', function (req, res, next) {
 router.get('/add_collect', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.query
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.addCollect(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -97,16 +97,16 @@ router.get('/add_collect', function (req, res, next) {
 router.get('/remove_collect', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.query
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.removeCollect(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -119,16 +119,16 @@ router.get('/remove_collect', function (req, res, next) {
 router.get('/get_collect_list', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.query
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.getCollectList(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -142,16 +142,16 @@ router.get('/get_collect_list', function (req, res, next) {
 router.post('/add_comments', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.body
-    
+
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleInfoService.addComments(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -160,20 +160,20 @@ router.post('/add_comments', function (req, res, next) {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
 });
-//查询评论列表
-router.get('/select_comments', function (req, res, next) {
+
+//添加二级评论
+router.post('/add_second_comments', function (req, res, next) {
     let accessToken = req.get('accessToken')
-    let articleData = req.query
-    
+    let articleData = req.body
     console.log(articleData)
     if (token.checkToken(accessToken)) {
-        articleInfoService.selectComments(articleData,
+        articleInfoService.addSecondComments(articleData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -181,5 +181,61 @@ router.get('/select_comments', function (req, res, next) {
     } else {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
+});
+
+//查询评论列表
+router.get('/select_comments', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let articleData = req.query
+
+    console.log(articleData)
+    articleInfoService.selectComments(articleData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
+
+});
+
+//查询二级评论列表
+router.get('/select_second_comments', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let articleData = req.query
+    console.log(articleData)
+    articleInfoService.selectSecondComments(articleData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
+});
+
+//更新点赞收藏评论数
+router.get('/get_counts', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let articleData = req.query
+    console.log(articleData)
+    articleInfoService.getCounts(articleData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
 });
 module.exports = router;

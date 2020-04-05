@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
-const videoInfoSchema = new mongoose.Schema({
-    userid:Schema.Types.ObjectId,
+const secondVideoSchema = new mongoose.Schema({
     videoid:Schema.Types.ObjectId,
-    type:String,
     createtime:{ type: Date, default: Date.now },
     from:Schema.Types.ObjectId,
     to:Schema.Types.ObjectId,
-    title:String,
     commentinfo:String,
     parentid:String
-}, {collection: 'videoInfo'});
-module.exports = mongoose.model('videoInfo', videoInfoSchema);
+}, {collection: 'secondVideo'});
+module.exports = mongoose.model('secondVideo', secondVideoSchema);
 //type 0:点赞 1:收藏 2:评论

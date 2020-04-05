@@ -36,7 +36,22 @@ router.get('/get_video_list_by_user', function (req, res, next) {
             }
         })
 });
+//根据id获取视频信息
+router.get('/get_video_info_by_id', function (req, res, next) {
+    let videoData = req.query
+    console.log(videoData)
+    videoService.getVideoInfoById(videoData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error) )
+                next(error);
+            } else {
+                console.log(JSON.stringify(error) , '数据::::' + data)
+                res.json({ code: '200', data: data })
 
+            }
+        })
+});
 //修改视频信息
 router.post('/update_video', function (req, res, next) {
     let accessToken = req.get('accessToken')

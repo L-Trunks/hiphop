@@ -1,9 +1,14 @@
 import KEYWORDMODEL from '../model/keywordsModel'
 import CONNECT from '../mongo/dbase'
 import errorNumber from '../config/errorNum'
-import VIDERMODEL from '../model/videoModel'
+import VIDEOMODEL from '../model/videoModel'
 import ARTICLEMODEL from '../model/articleModel'
-import messageService from '../services/messageService'
+import USERMODEL from '../model/userModel'
+import ARTICLEINFOMODEL from '../model/articleInfoModel'
+import VIDEOINFOMODEL from '../model/videoInfoModel'
+import SECONDCOMMENTMODEL from '../model/secondCommentModel'
+import SECONDVIDEOMODEL from '../model/secondVideoModel'
+// import messageService from '../services/messageService'
 import mongoose from 'mongoose';
 //添加关键字
 function addKeyword(wordData, callback) {
@@ -64,7 +69,7 @@ function deleteKeyword(wordData, callback) {
 function updateKeyword(wordData, callback) {
     CONNECT.connect().then(res => {
 
-        KEYWORDMODEL.update({ _id: mongoose.Types.ObjectId(wordData['_id'] )}, { $set: wordData }, (err, data) => {
+        KEYWORDMODEL.update({ _id: mongoose.Types.ObjectId(wordData['_id']) }, { $set: wordData }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -90,7 +95,7 @@ function selectKeyword(wordData, callback) {
                     foreignField: "_id",
                     as: "keywordUser"
                 },
-            },{
+            }, {
                 $match: wordData
 
             }], (err, data) => {
@@ -109,66 +114,63 @@ function selectKeyword(wordData, callback) {
     })
 }
 
-//视频　文章关键字监控
+//视频　文章 用户信息 评论关键字监控
 
 function videoKeyword(wordData, callback) {
     CONNECT.connect().then(res => {
-        let keywords = []
-        let selectKeyArr = []
+        // let keywords = []
+        // let selectKeyArr = []
         KEYWORDMODEL.find((err, data) => {
             if (err) {
-                callback(err, data)
-                //抛出异常
-            } else {
-                console.log(data)
-                data && data.length > 0 ? data.map(i => {
-                    keywords.push(i.keyword)
-                }) : ''
-            }
-        });
-        keywords.map(i => {
-            selectKeyArr.push({
-                videotitle: {
-                    $regex: i,
-                    $options: 'gi'
-                }
-            }, {
-                    introduce: {
-                        $regex: i,
-                        $options: 'gi'
-                    }
-                })
-        })
-
-        query.$and = selectKeyArr
-        VIDERMODEL.find(query, function (err, data) {
-            mongoose.disconnect()
-            if (err) {
-                console.log(err)
                 callback(err)
             } else {
-                if (data && data.length > 0) {
-                    data.map(i=>{
-                        let messageData = {
-                            message:'系统通知:您的视频”'+i.videotitle+'”标题或视频介绍中含有违规字符，请立即修改，逾期未修改合格将会对您的相关内容进行下架处理并扣除信誉分12分！',
-                            from:'关键字监控小助手',
-                            to:i.userid,
-                            status:'0'
-                        }
-                        messageService.addMessage(messageData,function(err,data){
-                            if (err) {
-                                console.log(err)
-                                callback(err)
-                            } else {
-                                console.log(data)
-                            }
-                        })
-                    })
-                    
-                    
+                for (let i in data) {
 
+                    VIDEOMODEL.find({
+                        $or: [{
+                            videotitle: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, videodata) {
+                        if (videodata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in videodata) {
+                                let titleTmp = String(videodata[j].videotitle)
+                                let introTmp = String(videodata[j].introduce)
+                                console.log(titleTmp, introTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                introTmp = introTmp.replace(data[i].keyword, '***')
+                                videodata[j].videotitle = titleTmp;
+                                videodata[j].introduce = introTmp;
+                                const video = new VIDEOMODEL(videodata[j])
+                                video.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && videodata[Object.keys(videodata).length - 1] == videodata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+
+
+
+                    })
                 }
+
+
+
             }
+
         })
 
     }).catch(err => {
@@ -180,60 +182,51 @@ function videoKeyword(wordData, callback) {
 
 function articleKeyword(wordData, callback) {
     CONNECT.connect().then(res => {
-        let keywords = []
-        let selectKeyArr = []
         KEYWORDMODEL.find((err, data) => {
             if (err) {
-                callback(err, data)
-                //抛出异常
-            } else {
-                console.log(data)
-                data && data.length > 0 ? data.map(i => {
-                    keywords.push(i.keyword)
-                }) : ''
-            }
-        });
-        keywords.map(i => {
-            selectKeyArr.push({
-                title: {
-                    $regex: i,
-                    $options: 'gi'
-                }
-            }, {
-                    article: {
-                        $regex: i,
-                        $options: 'gi'
-                    }
-                })
-        })
-
-        query.$and = selectKeyArr
-        ARTICLEMODEL.find(query, function (err, data) {
-            mongoose.disconnect()
-            if (err) {
-                console.log(err)
                 callback(err)
             } else {
-                if (data && data.length > 0) {
-                    data.map(i=>{
-                        let messageData = {
-                            message:'系统通知:您的帖子”'+i.videotitle+'”标题或内容中含有违规字符，请立即修改，逾期未修改合格将会对您的相关内容进行下架处理并扣除信誉分12分！',
-                            from:'关键字监控小助手',
-                            to:i.userid,
-                            status:'0'
-                        }
-                        messageService.addMessage(messageData,function(err,data){
-                            if (err) {
-                                console.log(err)
-                                callback(err)
-                            } else {
-                                console.log(data)
-                            }
-                        })
-                    })
-                    
-                    
 
+                for (let i in data) {
+
+                    ARTICLEMODEL.find({
+                        $or: [{
+                            title: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            article: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, articledata) {
+                        if (articledata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in articledata) {
+
+                                let titleTmp = String(articledata[j].title)
+                                let introTmp = String(articledata[j].article)
+                                console.log(titleTmp, introTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                introTmp = introTmp.replace(data[i].keyword, '***')
+                                articledata[j].title = titleTmp;
+                                articledata[j].article = introTmp;
+                                const article = new ARTICLEMODEL(articledata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && articledata[Object.keys(articledata).length - 1] == articledata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+
+                        }
+                    })
                 }
             }
         })
@@ -244,13 +237,280 @@ function articleKeyword(wordData, callback) {
     })
 }
 
+function userKeyword(wordData, callback) {
+    CONNECT.connect().then(res => {
+        KEYWORDMODEL.find((err, data) => {
+            if (err) {
+                callback(err)
+            } else {
+
+                for (let i in data) {
+
+                    USERMODEL.find({
+                        $or: [{
+                            nickname: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, seconddata) {
+                        if (seconddata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in seconddata) {
+                                let titleTmp = String(seconddata[j].nickname)
+                                let introTmp = String(seconddata[j].introduce)
+                                console.log(titleTmp, introTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                introTmp = introTmp.replace(data[i].keyword, '***')
+                                seconddata[j].nickname = titleTmp;
+                                seconddata[j].introduce = introTmp;
+                                const article = new USERMODEL(seconddata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && seconddata[Object.keys(seconddata).length - 1] == seconddata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+}
+
+//
+function articleInfoKeyword(wordData, callback) {
+    CONNECT.connect().then(res => {
+        KEYWORDMODEL.find((err, data) => {
+            if (err) {
+                callback(err)
+            } else {
+
+                for (let i in data) {
+
+                    ARTICLEINFOMODEL.find({
+                        $or: [{
+                            nickname: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, seconddata) {
+                        if (seconddata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in seconddata) {
+                                let titleTmp = String(seconddata[j].commentinfo)
+                                console.log(titleTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                seconddata[j].commentinfo = titleTmp;
+                                const article = new ARTICLEINFOMODEL(seconddata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && seconddata[Object.keys(seconddata).length - 1] == seconddata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+}
+
+function videoInfoKeyword(wordData, callback) {
+    CONNECT.connect().then(res => {
+        KEYWORDMODEL.find((err, data) => {
+            if (err) {
+                callback(err)
+            } else {
+
+                for (let i in data) {
+
+                    VIDEOINFOMODEL.find({
+                        $or: [{
+                            nickname: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, seconddata) {
+                        if (seconddata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in seconddata) {
+                                let titleTmp = String(seconddata[j].commentinfo)
+                                console.log(titleTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                seconddata[j].commentinfo = titleTmp;
+                                const article = new VIDEOINFOMODEL(seconddata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && seconddata[Object.keys(seconddata).length - 1] == seconddata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+}
+
+function secondArticleKeyword(wordData, callback) {
+    CONNECT.connect().then(res => {
+        KEYWORDMODEL.find((err, data) => {
+            if (err) {
+                callback(err)
+            } else {
+
+                for (let i in data) {
+
+                    SECONDCOMMENTMODEL.find({
+                        $or: [{
+                            nickname: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, seconddata) {
+                        if (seconddata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in seconddata) {
+                                let titleTmp = String(seconddata[j].commentinfo)
+                                console.log(titleTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                seconddata[j].commentinfo = titleTmp;
+                                const article = new SECONDCOMMENTMODEL(seconddata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && seconddata[Object.keys(seconddata).length - 1] == seconddata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+}
+
+function secondVideoKeyword(wordData, callback) {
+    CONNECT.connect().then(res => {
+        KEYWORDMODEL.find((err, data) => {
+            if (err) {
+                callback(err)
+            } else {
+
+                for (let i in data) {
+
+                    SECONDVIDEOMODEL.find({
+                        $or: [{
+                            nickname: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }, {
+                            introduce: {
+                                $regex: data[i].keyword,
+                                $options: 'gi'
+                            }
+                        }]
+                    }, function (err, seconddata) {
+                        if (seconddata == 0) {
+                            if (data[Object.keys(data).length - 1] == data[i]) {
+                                mongoose.disconnect()
+                                callback(err, {})
+                            }
+                        } else {
+                            for (let j in seconddata) {
+                                let titleTmp = String(seconddata[j].commentinfo)
+                                console.log(titleTmp)
+                                titleTmp = titleTmp.replace(data[i].keyword, '***')
+                                seconddata[j].commentinfo = titleTmp;
+                                const article = new SECONDVIDEOMODEL(seconddata[j])
+                                article.save();
+                                if (data[Object.keys(data).length - 1] == data[i] && seconddata[Object.keys(seconddata).length - 1] == seconddata[j]) {
+                                    mongoose.disconnect()
+                                    callback(err, {})
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+    }).catch(err => {
+        console.log(err)
+        callback(err, { desc: '链接数据库失败' })
+    })
+}
 module.exports = {
     addKeyword: addKeyword,
     deleteKeyword: deleteKeyword,
     updateKeyword: updateKeyword,
     selectKeyword: selectKeyword,
     videoKeyword: videoKeyword,
-    articleKeyword:articleKeyword
-
+    articleKeyword: articleKeyword,
+    userKeyword: userKeyword,
+    articleInfoKeyword: articleInfoKeyword,
+    videoInfoKeyword: videoInfoKeyword,
+    secondArticleKeyword: secondArticleKeyword,
+    secondVideoKeyword: secondVideoKeyword
 
 };

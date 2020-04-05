@@ -241,7 +241,7 @@ function getArticleInfoById(articleData, callback) {
 //添加浏览量
 function addArticleLook(articleData, callback) {
     CONNECT.connect().then(res => {
-        ARTICLEMODEL.update({ _id: mongoose.Types.ObjectId(articleData['_id'] )}, { $set: { lookcount: articleData.lookcount + 1 } }, (err, data) => {
+        ARTICLEMODEL.update({ _id: mongoose.Types.ObjectId(articleData['_id'] )}, { $set: { lookscount: +articleData['lookscount'] + 1 } }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)

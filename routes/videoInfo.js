@@ -4,20 +4,20 @@ const router = express.Router();
 import errorNumber from '../config/errorNum'
 const token = require('../token/token') //引入
 const videoInfoService = require('../services/videoInfoService')
-//点赞视频
-router.get('/add_goods', function (req, res, next) {
+//点赞文章
+router.post('/add_goods', function (req, res, next) {
     let accessToken = req.get('accessToken')
-    let videoData = req.query
-    
+    let videoData = req.body
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addGoods(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -30,16 +30,16 @@ router.get('/add_goods', function (req, res, next) {
 router.get('/remove_goods', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.query
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.removeGoods(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -53,16 +53,16 @@ router.get('/remove_goods', function (req, res, next) {
 router.get('/get_goods_status', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.query
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.getGoodsStatus(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -71,20 +71,20 @@ router.get('/get_goods_status', function (req, res, next) {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
 });
-//收藏视频
+//收藏文章
 router.get('/add_collect', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.query
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addCollect(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -97,16 +97,16 @@ router.get('/add_collect', function (req, res, next) {
 router.get('/remove_collect', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.query
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.removeCollect(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -119,16 +119,16 @@ router.get('/remove_collect', function (req, res, next) {
 router.get('/get_collect_list', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.query
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.getCollectList(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -142,16 +142,16 @@ router.get('/get_collect_list', function (req, res, next) {
 router.post('/add_comments', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let videoData = req.body
-    
+
     console.log(videoData)
     if (token.checkToken(accessToken)) {
         videoInfoService.addComments(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -160,20 +160,20 @@ router.post('/add_comments', function (req, res, next) {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
 });
-//查询评论列表
-router.get('/select_comments', function (req, res, next) {
+
+//添加二级评论
+router.post('/add_second_comments', function (req, res, next) {
     let accessToken = req.get('accessToken')
-    let videoData = req.query
-    
+    let videoData = req.body
     console.log(videoData)
     if (token.checkToken(accessToken)) {
-        videoInfoService.selectComments(videoData,
+        videoInfoService.addSecondComments(videoData,
             function (error, data) {
                 if (error) {
-                    console.log('出现错误:' + JSON.stringify(error) )
+                    console.log('出现错误:' + JSON.stringify(error))
                     next(error);
                 } else {
-                    console.log(JSON.stringify(error) , '数据::::' + data)
+                    console.log(JSON.stringify(error), '数据::::' + data)
                     res.json({ code: '200', data: data })
 
                 }
@@ -181,5 +181,60 @@ router.get('/select_comments', function (req, res, next) {
     } else {
         res.json(errorNumber.TOKEN_TIME_OUT())
     }
+});
+
+//查询评论列表
+router.get('/select_comments', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let videoData = req.query
+    console.log(videoData)
+    videoInfoService.selectComments(videoData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
+
+});
+
+//查询二级评论列表
+router.get('/select_second_comments', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let videoData = req.query
+    console.log(videoData)
+    videoInfoService.selectSecondComments(videoData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
+});
+
+//更新点赞收藏评论数
+router.get('/get_counts', function (req, res, next) {
+    // let accessToken = req.get('accessToken')
+    let videoData = req.query
+    console.log(videoData)
+    videoInfoService.getCounts(videoData,
+        function (error, data) {
+            if (error) {
+                console.log('出现错误:' + JSON.stringify(error))
+                next(error);
+            } else {
+                console.log(JSON.stringify(error), '数据::::' + data)
+                res.json({ code: '200', data: data })
+
+            }
+        })
 });
 module.exports = router;
