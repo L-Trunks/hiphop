@@ -98,7 +98,7 @@ router.post('/delete_video', function (req, res, next) {
 //添加视频
 router.post('/add_video', function (req, res, next) {
     let accessToken = req.get('accessToken')
-    let videoData = req.query
+    let videoData = req.body
     
     console.log(videoData)
     if (token.checkToken(accessToken)) {

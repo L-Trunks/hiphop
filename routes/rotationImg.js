@@ -31,7 +31,7 @@ router.get('/get_rotation_img_list_by_info', function (req, res, next) {
                 console.log('出现错误:' + JSON.stringify(error) )
                 next(error);
             } else {
-                console.log(JSON.stringify(error) , '数据::::' + data)
+                // console.log(JSON.stringify(error) , '数据::::' + data)
                 res.json({ code: '200', data: data })
 
             }

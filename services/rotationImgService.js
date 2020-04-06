@@ -89,7 +89,6 @@ function selectRotationImg(rotationImgData, callback) {
                     callback(err, data)
                     //抛出异常
                 } else {
-                    console.log(data)
                     callback(err, data)
                 }
             });

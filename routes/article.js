@@ -98,7 +98,6 @@ router.post('/delete_article', function (req, res, next) {
 router.post('/add_article', function (req, res, next) {
     let accessToken = req.get('accessToken')
     let articleData = req.body
-    
     console.log(articleData)
     if (token.checkToken(accessToken)) {
         articleService.addArticle(articleData,

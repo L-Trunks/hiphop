@@ -96,7 +96,7 @@ function addCollect(videoData, callback) {
 //取消收藏
 function removeCollect(videoData, callback) {
     CONNECT.connect().then(res => {
-        VIDEOINFOMODEL.remove(videoData, (err, data, numAffected) => {
+        VIDEOINFOMODEL.remove({ _id: mongoose.Types.ObjectId(videoData['_id']) }, (err, data, numAffected) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)
@@ -161,11 +161,6 @@ function getCollectList(videoData, callback) {
             {
                 // 查询条数
                 $limit: _num
-            },
-
-            {
-                // 计数
-                $count: "count"
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
@@ -175,7 +170,7 @@ function getCollectList(videoData, callback) {
                     console.log(data)
                     //格式化数据
                     const page = {
-                        page_no: videoData['page_no'] + 1,
+                        page_no: +videoData['page_no'] + 1,
                         page_size: _num,
                         total: _total,
                         data: data

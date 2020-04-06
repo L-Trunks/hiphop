@@ -17,6 +17,7 @@ var token = {
         return base64Str + "." + signature;
     },
     decodeToken: function (token) {
+        console.log('TOKEN+++++'+token)
         var decArr = token.split(".");
         if (decArr.length < 2) {
             //token不合法

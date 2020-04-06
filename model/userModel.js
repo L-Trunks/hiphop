@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     introduce:String,
     birthday:String,
+    imgurl:String,
     createtime:{ type: Date, default: Date.now },
     mail:String,
     permission:String
