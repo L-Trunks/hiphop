@@ -66,8 +66,7 @@ function userLogin(userData, callback) {
 //设置管理员
 function setManagement(userData, callback) {
     CONNECT.connect().then(res => {
-
-        USERMODEL.update({ username: userData['username'] }, { $set: { permission: '1' } }, (err, data) => {
+        USERMODEL.update({ username: userData['username'] }, { $set: { permission: userData['permission'] } }, (err, data) => {
             mongoose.disconnect()
             if (err) {
                 callback(err, data)

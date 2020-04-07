@@ -6,9 +6,9 @@ const token = require('../token/token') //引入
 const rotationImgService = require('../services/rotationImgService')
 //获取所有图片
 router.get('/get_all_rotation_img_list', function (req, res, next) {
-    // let rotationImgData = req.query
-    // console.log(rotationImgData)
-    rotationImgService.selectRotationImg({},
+    let rotationImgData = req.query
+    console.log(rotationImgData)
+    rotationImgService.selectRotationImg(rotationImgData,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error) )

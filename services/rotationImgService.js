@@ -70,7 +70,10 @@ function selectRotationImg(rotationImgData, callback) {
     CONNECT.connect().then(res => {
         let filter = {}
         if (rotationImgData['_id']) {
-            filter = { _id: mongoose.Types.ObjectId(rotationImgData['_id']) }
+            // filter = rotationImgData
+            filter['_id'] = mongoose.Types.ObjectId(rotationImgData['_id'])
+        } else {
+            filter = rotationImgData
         }
         ROTATIONIMGMODEL.aggregate([
             {
@@ -83,6 +86,12 @@ function selectRotationImg(rotationImgData, callback) {
             },
             {
                 $match: filter
+            }, {
+                // 排序
+                $sort: {
+                    // 倒序
+                    "_id": -1
+                }
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {

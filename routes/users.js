@@ -75,7 +75,7 @@ router.post('/get_user_info_by_token', function (req, res, next) {
 
 });
 
-//设置管理员
+//设置管理员及认证用户
 router.post('/set_management', function (req, res, next) {
   let accessToken = req.get('accessToken')
   let userData = req.body

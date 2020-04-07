@@ -18,6 +18,7 @@ const messageRouter = require('./routes/message');
 const keywordsRouter = require('./routes/keywords');
 const noticeRouter = require('./routes/notice');
 const letterRouter = require('./routes/letter');
+const matchRouter = require('./routes/match');
 const middles = require('./middles/middles');
 const bodyParser = require('body-parser');
 //定时任务
@@ -51,6 +52,7 @@ app.use('/api/message', messageRouter);
 app.use('/api/keywords', keywordsRouter);
 app.use('/api/notice', noticeRouter);
 app.use('/api/letter', letterRouter);
+app.use('/api/match', matchRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
