@@ -12,12 +12,12 @@ function getResultVideoList(searchData, callback) {
         let _skip = +searchData['page_no'] * _num;
         let keyword = searchData['keyword'] //从URL中传来的 keyword参数
         let reg = new RegExp(keyword, 'i') //不区分大小写
-        VIDEOMODEL.count({ keyword: keyword }, function (err, doc) { // 查询总条数（用于分页）
+        VIDEOMODEL.find({ keyword: keyword }, function (err, doc) { // 查询总条数（用于分页）
             console.log(2)
             if (err) {
                 console.log(err)
             } else {
-                _total = doc
+                _total = doc.length
             }
         })
         VIDEOMODEL.aggregate([
@@ -75,11 +75,11 @@ function getResultArticleList(searchData, callback) {
         let _skip = +searchData['page_no'] * _num;
         let keyword = searchData['keyword'] //从URL中传来的 keyword参数
         let reg = new RegExp(keyword, 'i') //不区分大小写
-        ARTICLEMODEL.count({ keyword: keyword }, function (err, doc) { // 查询总条数（用于分页）
+        ARTICLEMODEL.find({ keyword: keyword }, function (err, doc) { // 查询总条数（用于分页）
             if (err) {
                 console.log(err)
             } else {
-                _total = doc
+                _total = doc.length
             }
         })
         ARTICLEMODEL.aggregate(
