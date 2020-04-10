@@ -79,7 +79,7 @@ function selectMessage(messageData, callback) {
     CONNECT.connect().then(res => {
         MESSAGEMODEL.aggregate([
             {
-                $match: {userid:mongoose.Types.ObjectId(messageData['userid'])}
+                $match: {to:mongoose.Types.ObjectId(messageData['userid'])}
 
             },
             {

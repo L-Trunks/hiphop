@@ -98,6 +98,10 @@ function selectKeyword(wordData, callback) {
             }, {
                 $match: wordData
 
+            }, {
+                $sort: {
+                    _id: -1
+                }
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {
