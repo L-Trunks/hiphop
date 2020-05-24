@@ -6,9 +6,9 @@ const token = require('../token/token') //引入
 const danceSortService = require('../services/danceSortService')
 //获取所有舞种
 router.get('/get_all_dance_sort_list', function (req, res, next) {
-    // let sortData = req.query
-    // console.log(sortData)
-    danceSortService.selectSort({},
+    let sortData = req.query
+    console.log(sortData)
+    danceSortService.selectSort(sortData,
         function (error, data) {
             if (error) {
                 console.log('出现错误:' + JSON.stringify(error) )

@@ -10,4 +10,4 @@ const rotationImgSchema = new mongoose.Schema({
     status:String,
 }, {collection: 'rotationimg'});
 module.exports = mongoose.model('rotationimg', rotationImgSchema);
-//Status状态　0:未上架　1:已上架　2:上架中 3:公告
+//Status状态　0:未上架　1:已上架　2:上架中 3:公告上架中 4:公告下架

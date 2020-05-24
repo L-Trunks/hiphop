@@ -92,6 +92,11 @@ function selectSort(sortData, callback) {
                 }
             }, {
                 $match: sortData
+            },
+            {
+                $sort: {
+                    _id: -1
+                }
             }], (err, data) => {
                 mongoose.disconnect()
                 if (err) {

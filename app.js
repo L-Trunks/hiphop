@@ -19,6 +19,7 @@ const keywordsRouter = require('./routes/keywords');
 const noticeRouter = require('./routes/notice');
 const letterRouter = require('./routes/letter');
 const matchRouter = require('./routes/match');
+const roomRouter = require('./routes/room');
 const middles = require('./middles/middles');
 const bodyParser = require('body-parser');
 //定时任务
@@ -53,7 +54,18 @@ app.use('/api/keywords', keywordsRouter);
 app.use('/api/notice', noticeRouter);
 app.use('/api/letter', letterRouter);
 app.use('/api/match', matchRouter);
+app.use('/api/room', roomRouter);
 
+// 请求超时处理
+// 路由请求超时的中间件
+app.use(function (req, res, next) {
+    // 这里必须是Response响应的定时器【120秒】
+    res.setTimeout(120*1000, function () {
+        console.log("Request has timed out.");
+        return res.status(408).send("请求超时")
+    });
+    next();
+});
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

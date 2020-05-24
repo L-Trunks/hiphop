@@ -9,4 +9,4 @@ const danceSortSchema = new mongoose.Schema({
     status:String
 }, {collection: 'danceSort'});
 module.exports = mongoose.model('danceSort', danceSortSchema);
-//status  0:已上架　1:未上架　　2:上架中
+//status  0:未上架　1:已上架

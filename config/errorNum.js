@@ -43,6 +43,9 @@ const WORD_ALREADY = () => {
     return resh.detailResponse('该关键字已经存在', '1013')
 }
 
+const ROOM_ALREADY = () => {
+    return resh.detailResponse('一个人只能创建一个房间', '1014')
+}
 export default {
     DB_CONNECT, 
     NOT_LOGIN, 
@@ -55,5 +58,6 @@ export default {
     DANCE_SORT_ALREADY,
     ROTATION_IMG_ALREADY,
     UPLOAD_ERR,
-    WORD_ALREADY
+    WORD_ALREADY,
+    ROOM_ALREADY
 }
