@@ -24,8 +24,8 @@ function getResultVideoList(searchData, callback) {
             {
                 $match: {
                     $or: [ //多条件，数组
-                        { videotitle: { $regex: reg, $options: '$i' } },
-                        { introduce: { $regex: reg, $options: '$i' } }
+                        { videotitle: { $regex: reg } },
+                        { introduce: { $regex: reg } }
                     ]
                 }
             },
@@ -85,9 +85,9 @@ function getResultArticleList(searchData, callback) {
         ARTICLEMODEL.aggregate(
             {
                 $match:{$or: [ //多条件，数组
-                    { title: { $regex: reg, $options: '$i' } },
-                    { article: { $regex: reg, $options: '$i' } },
-                    { nickname: { $regex: reg, $options: '$i' } },
+                    { title: { $regex: reg } },
+                    { article: { $regex: reg } },
+                    { nickname: { $regex: reg } },
 
                 ]}
             },

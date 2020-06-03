@@ -19,7 +19,7 @@ router.post('/login', function (req, res, next) {
         next(error);
       } else {
         console.log(JSON.stringify(error), '数据::::' + typeof data)
-        if (data !== 0) {
+        if (data != 0 ) {
           let tokens = token.createToken(data[0].username, tokenTimes);
           res.json({ code: '200', data: data, accessToken: tokens && tokens || null });
         } else {

@@ -82,9 +82,10 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 //定时任务 全局关键字监控
-//每天两分钟执行一次关键字检索
-
-cron.schedule("0 */8 * * * *", function () {
+//每天八分钟执行一次关键字检索
+// */5 * * * * ?  5秒
+// 0 */8 * * * *  8分钟
+cron.schedule("*/5 * * * * *", function () {
   console.log("执行关键字检索.....");
   keywordService.videoKeyword({},
     function (error, data) {
