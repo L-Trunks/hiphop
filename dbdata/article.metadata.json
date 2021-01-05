@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"hiphop.article"}],"uuid":"a47b489df8a94b9a8d2112c814824fae"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"hiphop.article"}],"uuid":"62d71df33310473ca8920f9c85474a76"}

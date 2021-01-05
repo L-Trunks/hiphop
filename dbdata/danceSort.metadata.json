@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"hiphop.danceSort"}],"uuid":"98504a2c273e4e33bbb8a9afb95c3008"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"hiphop.danceSort"}],"uuid":"f8e2e558e6174a0096f701a76b39c419"}

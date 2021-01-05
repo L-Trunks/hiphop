@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"hiphop.message"}],"uuid":"e15d995adf1d4d0aaa71fec617359e8e"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"hiphop.message"}],"uuid":"b79f0c8d742146b291e5ab50b9ea4e0d"}

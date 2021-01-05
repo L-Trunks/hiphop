@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"hiphop.user"}],"uuid":"b7643053bef74cf59c0960f1140239ea"}
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"hiphop.user"}],"uuid":"8130493c849d4c52b2391765e529850a"}
