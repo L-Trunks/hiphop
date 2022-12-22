@@ -11,7 +11,7 @@
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^8.2.0",
     "formidable": "^1.2.1",
     "http-errors": "~1.6.3",
     "mongoose": "^4.11.10",
